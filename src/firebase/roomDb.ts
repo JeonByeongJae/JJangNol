@@ -51,6 +51,14 @@ export async function joinRoom(roomId: string, chaserName: string): Promise<void
   await set(ref(db, `rooms/${roomId}`), gameState)
 }
 
+// Firebase는 배열을 숫자 키 객체로 반환하거나 빈 배열을 undefined로 반환할 수 있음
+function toArray<T>(val: unknown): T[] {
+  if (!val) return []
+  if (Array.isArray(val)) return val as T[]
+  // 숫자 키 객체 {"0": v, "1": v, ...} → 배열로 변환
+  return Object.values(val as Record<string, T>)
+}
+
 // 실시간 구독
 export function subscribeRoom(
   roomId: string,
@@ -62,15 +70,20 @@ export function subscribeRoom(
       callback(null)
       return
     }
-    // Firebase는 빈 배열을 저장하지 않으므로 undefined → [] 로 정규화
     const data = snapshot.val() as GameRoom
+    const rawPiles = (data.piles ?? {}) as unknown as Record<string, unknown>
     callback({
       ...data,
-      trail: data.trail ?? [],
-      runnerHand: data.runnerHand ?? [],
-      chaserHand: data.chaserHand ?? [],
-      guessAttempt: data.guessAttempt ?? [],
+      trail: toArray(data.trail),
+      runnerHand: toArray(data.runnerHand),
+      chaserHand: toArray(data.chaserHand),
+      guessAttempt: toArray(data.guessAttempt),
       cardsPlacedThisTurn: data.cardsPlacedThisTurn ?? 0,
+      piles: {
+        low: toArray<number>(rawPiles.low),
+        mid: toArray<number>(rawPiles.mid),
+        high: toArray<number>(rawPiles.high),
+      },
     })
   })
   return () => off(roomRef)
@@ -80,13 +93,18 @@ export function subscribeRoom(
 export async function drawCard(roomId: string, pile: Pile): Promise<void> {
   const snapshot = await get(ref(db, `rooms/${roomId}`))
   const raw = snapshot.val() as GameRoom
-  // Firebase는 빈 배열을 저장하지 않으므로 get() 결과도 정규화
+  const rawPilesD = (raw.piles ?? {}) as unknown as Record<string, unknown>
   const room: GameRoom = {
     ...raw,
-    runnerHand: raw.runnerHand ?? [],
-    chaserHand: raw.chaserHand ?? [],
-    guessAttempt: raw.guessAttempt ?? [],
-    trail: raw.trail ?? [],
+    runnerHand: toArray<number>(raw.runnerHand),
+    chaserHand: toArray<number>(raw.chaserHand),
+    guessAttempt: toArray(raw.guessAttempt),
+    trail: toArray(raw.trail),
+    piles: {
+      low: toArray<number>(rawPilesD.low),
+      mid: toArray<number>(rawPilesD.mid),
+      high: toArray<number>(rawPilesD.high),
+    },
   }
   const piles = { ...room.piles, [pile]: [...room.piles[pile]] }
   const card = piles[pile][0]
