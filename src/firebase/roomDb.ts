@@ -79,7 +79,15 @@ export function subscribeRoom(
 // 더미에서 카드 뽑기
 export async function drawCard(roomId: string, pile: Pile): Promise<void> {
   const snapshot = await get(ref(db, `rooms/${roomId}`))
-  const room = snapshot.val() as GameRoom
+  const raw = snapshot.val() as GameRoom
+  // Firebase는 빈 배열을 저장하지 않으므로 get() 결과도 정규화
+  const room: GameRoom = {
+    ...raw,
+    runnerHand: raw.runnerHand ?? [],
+    chaserHand: raw.chaserHand ?? [],
+    guessAttempt: raw.guessAttempt ?? [],
+    trail: raw.trail ?? [],
+  }
   const piles = { ...room.piles, [pile]: [...room.piles[pile]] }
   const card = piles[pile][0]
   if (card === undefined) throw new Error('더미가 비었습니다.')
@@ -116,7 +124,14 @@ export async function placeCard(
   boosters: number[] = []
 ): Promise<void> {
   const snapshot = await get(ref(db, `rooms/${roomId}`))
-  const room = snapshot.val() as GameRoom
+  const raw = snapshot.val() as GameRoom
+  const room: GameRoom = {
+    ...raw,
+    runnerHand: raw.runnerHand ?? [],
+    trail: raw.trail ?? [],
+    guessAttempt: raw.guessAttempt ?? [],
+    chaserHand: raw.chaserHand ?? [],
+  }
 
   let hand = room.runnerHand.filter(c => c !== cardValue)
   boosters.forEach(b => { hand = hand.filter(c => c !== b) })
@@ -165,7 +180,8 @@ export async function toggleGuess(
   value: number
 ): Promise<void> {
   const snapshot = await get(ref(db, `rooms/${roomId}`))
-  const room = snapshot.val() as GameRoom
+  const raw = snapshot.val() as GameRoom
+  const room: GameRoom = { ...raw, guessAttempt: raw.guessAttempt ?? [], trail: raw.trail ?? [], runnerHand: raw.runnerHand ?? [], chaserHand: raw.chaserHand ?? [] }
   const existing = room.guessAttempt.findIndex(g => g.trailIndex === trailIndex)
   const guessAttempt =
     existing >= 0
@@ -178,7 +194,14 @@ export async function toggleGuess(
 // 추격자: 추리 제출 — 맞으면 true, 틀리면 false 반환
 export async function submitGuess(roomId: string): Promise<boolean> {
   const snapshot = await get(ref(db, `rooms/${roomId}`))
-  const room = snapshot.val() as GameRoom
+  const raw = snapshot.val() as GameRoom
+  const room: GameRoom = {
+    ...raw,
+    guessAttempt: raw.guessAttempt ?? [],
+    trail: raw.trail ?? [],
+    runnerHand: raw.runnerHand ?? [],
+    chaserHand: raw.chaserHand ?? [],
+  }
 
   const allCorrect =
     room.guessAttempt.length > 0 &&
