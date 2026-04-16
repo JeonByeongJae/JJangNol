@@ -11,7 +11,6 @@ interface Props {
   pendingCard: number | null
   onConfirmPlace: () => void
   onPass: () => void
-  onEndTurn: () => void
   onClearBoosters: () => void
   guessCount: number
   onSubmitGuess: () => void
@@ -22,15 +21,15 @@ interface Props {
 export default function ActionPanel({
   myRole, turn, phase, turnNumber,
   placedThisTurn, selectedBoosters, pendingCard,
-  onConfirmPlace, onPass, onEndTurn, onClearBoosters,
+  onConfirmPlace, onPass, onClearBoosters,
   guessCount, onSubmitGuess, onEndChaserTurn, onClearGuess,
 }: Props) {
   const isMyTurn = turn === myRole
   if (!isMyTurn || phase === 'draw') return null
 
   if (myRole === 'runner') {
-    const maxPlace = turnNumber === 0 ? 2 : 1
-    const canPlaceMore = placedThisTurn < maxPlace
+    const isFirstTurn = turnNumber === 0
+    const canPlaceMore = placedThisTurn < (isFirstTurn ? 2 : 1)
 
     return (
       <div className={styles.panel}>
@@ -46,12 +45,8 @@ export default function ActionPanel({
               {pendingCard} 놓기
             </button>
           )}
-          {placedThisTurn > 0 && !canPlaceMore && (
-            <button className={styles.primary} onClick={onEndTurn}>
-              턴 종료
-            </button>
-          )}
-          {(placedThisTurn === 0 || (canPlaceMore && placedThisTurn > 0)) && pendingCard === null && (
+          {/* 첫 턴 1장 배치 후 조기 종료 또는 아직 아무것도 안 놓았을 때 패스 */}
+          {canPlaceMore && pendingCard === null && (
             <button className={styles.secondary} onClick={onPass}>
               {placedThisTurn === 0 ? '패스 (턴 넘기기)' : '여기까지 (턴 종료)'}
             </button>

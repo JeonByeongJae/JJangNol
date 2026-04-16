@@ -1,6 +1,6 @@
 import { ref, set, get, update, onValue, off } from 'firebase/database'
 import { db } from './config'
-import type { GameRoom, Pile } from '../types/game'
+import type { GameRoom, Pile, TrailCard } from '../types/game'
 import {
   initializeGameCards,
   createStartingTrail,
@@ -74,7 +74,10 @@ export function subscribeRoom(
     const rawPiles = (data.piles ?? {}) as unknown as Record<string, unknown>
     callback({
       ...data,
-      trail: toArray(data.trail),
+      trail: toArray<TrailCard>(data.trail).map((c: TrailCard) => ({
+        ...c,
+        boosters: c.boosters ? toArray<number>(c.boosters) : undefined,
+      })),
       runnerHand: toArray(data.runnerHand),
       chaserHand: toArray(data.chaserHand),
       guessAttempt: toArray(data.guessAttempt),
@@ -233,8 +236,15 @@ export async function submitGuess(roomId: string): Promise<boolean> {
       return guess ? { ...card, face: 'revealed' as const } : card
     })
     const chaserBoard = { ...room.chaserBoard }
-    room.guessAttempt.forEach(({ value }) => {
+    room.guessAttempt.forEach(({ trailIndex, value }) => {
       if (value >= 1 && value <= 42) chaserBoard[value] = 'correct'
+      // 부스터 카드는 경로에 없으므로 eliminated 처리
+      const boosters = toArray<number>(trail[trailIndex]?.boosters)
+      boosters.forEach(b => {
+        if (b >= 1 && b <= 42 && chaserBoard[b] === 'unknown') {
+          chaserBoard[b] = 'eliminated'
+        }
+      })
     })
     const winner = checkWinner(trail)
 

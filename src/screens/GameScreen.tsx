@@ -37,11 +37,12 @@ export default function GameScreen({ room, roomId, myRole }: Props) {
   const canAct = isMyTurn && room.phase === 'action'
 
   const lastTrailValue = room.trail[room.trail.length - 1]?.value ?? 0
+  const maxPlace = room.turnNumber === 0 ? 2 : 1
+  const canPlaceMore = canAct && myRole === 'runner' && room.cardsPlacedThisTurn < maxPlace
 
-  const playableCards =
-    canAct && myRole === 'runner'
-      ? getPlayableCards(room.runnerHand, lastTrailValue, selectedBoosters)
-      : []
+  const playableCards = canPlaceMore
+    ? getPlayableCards(room.runnerHand, lastTrailValue, selectedBoosters)
+    : []
 
   // 턴이 바뀌면 로컬 UI 상태 초기화
   useEffect(() => {
@@ -52,7 +53,7 @@ export default function GameScreen({ room, roomId, myRole }: Props) {
 
   const handleRunnerCardClick = useCallback(
     (card: number) => {
-      if (!canAct || myRole !== 'runner') return
+      if (!canPlaceMore || myRole !== 'runner') return
 
       if (selectedBoosters.includes(card)) {
         setSelectedBoosters(prev => prev.filter(b => b !== card))
@@ -76,6 +77,11 @@ export default function GameScreen({ room, roomId, myRole }: Props) {
     await placeCard(roomId, pendingCard, selectedBoosters)
     setPendingCard(null)
     setSelectedBoosters([])
+    // 최대 배치 수에 도달하면 자동 턴 종료 (게임 종료 시 App.tsx가 ResultScreen으로 전환)
+    const newCount = room.cardsPlacedThisTurn + 1
+    if (newCount >= maxPlace) {
+      await endRunnerTurn(roomId)
+    }
   }
 
   const handlePass = async () => {
@@ -84,11 +90,6 @@ export default function GameScreen({ room, roomId, myRole }: Props) {
     setSelectedBoosters([])
   }
 
-  const handleEndRunnerTurn = async () => {
-    await endRunnerTurn(roomId)
-    setPendingCard(null)
-    setSelectedBoosters([])
-  }
 
   const handleDraw = async (pile: Pile) => {
     await drawCard(roomId, pile)
@@ -185,7 +186,6 @@ export default function GameScreen({ room, roomId, myRole }: Props) {
         pendingCard={pendingCard}
         onConfirmPlace={handleConfirmPlace}
         onPass={handlePass}
-        onEndTurn={handleEndRunnerTurn}
         onClearBoosters={() => setSelectedBoosters([])}
         guessCount={room.guessAttempt.length}
         onSubmitGuess={handleSubmitGuess}
