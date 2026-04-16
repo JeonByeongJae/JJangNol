@@ -1,0 +1,80 @@
+.section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.label {
+  color: var(--color-gold);
+  font-size: 10px;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.trail {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.card {
+  flex-shrink: 0;
+  width: var(--card-w);
+  height: var(--card-h);
+  border-radius: var(--card-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  user-select: none;
+}
+
+.revealed {
+  background: var(--color-card-face);
+  border: 2px solid var(--color-gold);
+}
+
+.faceDown {
+  background: var(--color-card-back);
+  border: 1.5px solid #666;
+}
+
+.guessable {
+  cursor: pointer;
+}
+
+.guessable:hover {
+  border-color: var(--color-gold);
+  opacity: 0.85;
+}
+
+.selected {
+  border: 2px solid var(--color-gold) !important;
+  box-shadow: 0 0 6px var(--color-gold);
+}
+
+.value {
+  color: var(--color-text);
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.secretValue {
+  color: var(--color-gold);
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.boosterBadge {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  background: #3a2510;
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  padding: 1px 3px;
+  font-size: 7px;
+  color: var(--color-gold);
+}

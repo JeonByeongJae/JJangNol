@@ -1,0 +1,58 @@
+.section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.label {
+  color: var(--color-gold);
+  font-size: 10px;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.piles {
+  display: flex;
+  gap: 8px;
+}
+
+.pile {
+  flex: 1;
+  background: #3d2a15;
+  border: 1.5px solid var(--color-border-dim);
+  border-radius: 5px;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: border-color 0.15s;
+}
+
+.active {
+  border-color: var(--color-gold);
+  cursor: pointer;
+}
+
+.active:hover {
+  background: #4a3520;
+}
+
+.pileLabel {
+  color: var(--color-gold);
+  font-size: 9px;
+}
+
+.cardBack {
+  width: 30px;
+  height: 42px;
+  background: var(--color-card-face);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+}
+
+.count {
+  color: var(--color-text-muted);
+  font-size: 9px;
+}

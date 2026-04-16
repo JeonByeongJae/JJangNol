@@ -1,0 +1,57 @@
+.section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.label {
+  color: var(--color-gold);
+  font-size: 10px;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.cell {
+  background: #2a1a08;
+  border: 1px solid var(--color-border-dim);
+  border-radius: 3px;
+  padding: 5px 0;
+  color: var(--color-gold);
+  font-size: 10px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.cell:hover {
+  background: #3a2a18;
+}
+
+.eliminated {
+  background: #3a1a1a;
+  border-color: var(--color-danger);
+  color: #cc6666;
+  text-decoration: line-through;
+}
+
+.correct {
+  background: #1a3a1a;
+  border-color: var(--color-success);
+  color: #6acc6a;
+}
+
+.legend {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+  font-size: 9px;
+}
+
+.legendCorrect { color: #6acc6a; }
+.legendElim { color: #cc6666; }

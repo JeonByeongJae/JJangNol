@@ -1,0 +1,30 @@
+.banner {
+  width: 100%;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.myTurn {
+  background: #3d2a15;
+  border: 1px solid var(--color-gold);
+  color: var(--color-text);
+}
+
+.waiting {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-dim);
+  color: var(--color-text-muted);
+}
+
+.role {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.message {
+  flex: 1;
+}

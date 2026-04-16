@@ -1,0 +1,58 @@
+:root {
+  --color-bg: #2c1810;
+  --color-surface: #1a0e08;
+  --color-card-face: #5c3a1e;
+  --color-card-back: #111111;
+  --color-gold: #c8a45a;
+  --color-border: #8a6a30;
+  --color-border-dim: #6a5030;
+  --color-text: #f5e6c8;
+  --color-text-muted: #a08060;
+  --color-success: #4a8a4a;
+  --color-danger: #cc3333;
+
+  --card-w: 44px;
+  --card-h: 62px;
+  --card-radius: 5px;
+  --max-width: 480px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: Georgia, 'Times New Roman', serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+  outline: none;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+input {
+  font-family: inherit;
+  outline: none;
+}
