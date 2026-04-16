@@ -1,0 +1,55 @@
+.section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.label {
+  color: var(--color-gold);
+  font-size: 10px;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.hand {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.card {
+  flex-shrink: 0;
+  width: var(--card-w);
+  height: var(--card-h);
+  background: var(--color-card-face);
+  border: 2px solid var(--color-border);
+  border-radius: var(--card-radius);
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: bold;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.playable {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 6px rgba(200, 164, 90, 0.5);
+  cursor: pointer;
+}
+
+.playable:hover:not(:disabled) {
+  background: #6a4a2e;
+}
+
+.booster {
+  border-color: #7ab87a;
+  box-shadow: 0 0 6px rgba(122, 184, 122, 0.5);
+  cursor: pointer;
+}
+
+.empty {
+  color: var(--color-text-muted);
+  font-size: 12px;
+  align-self: center;
+}
