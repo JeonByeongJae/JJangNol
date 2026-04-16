@@ -57,7 +57,19 @@ export function subscribeRoom(
 ): () => void {
   const roomRef = ref(db, `rooms/${roomId}`)
   onValue(roomRef, snapshot => {
-    callback(snapshot.exists() ? (snapshot.val() as GameRoom) : null)
+    if (!snapshot.exists()) {
+      callback(null)
+      return
+    }
+    // Firebase는 빈 배열을 저장하지 않으므로 undefined → [] 로 정규화
+    const data = snapshot.val() as GameRoom
+    callback({
+      ...data,
+      trail: data.trail ?? [],
+      runnerHand: data.runnerHand ?? [],
+      chaserHand: data.chaserHand ?? [],
+      guessAttempt: data.guessAttempt ?? [],
+    })
   })
   return () => off(roomRef)
 }
