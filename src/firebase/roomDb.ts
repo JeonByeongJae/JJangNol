@@ -302,11 +302,15 @@ export async function endChaserTurn(roomId: string): Promise<void> {
   })
 }
 
-// 같은 방에서 다시 게임 (역할 유지)
-export async function rematchRoom(roomId: string): Promise<void> {
+// 같은 방에서 다시 게임
+export async function rematchRoom(roomId: string, swapRoles = false): Promise<void> {
   const snapshot = await get(ref(db, `rooms/${roomId}`))
   if (!snapshot.exists()) throw new Error('방을 찾을 수 없습니다.')
   const room = snapshot.val() as GameRoom
+
+  const players = swapRoles
+    ? { runner: { name: room.players.chaser?.name ?? '' }, chaser: { name: room.players.runner?.name ?? '' } }
+    : room.players
 
   const { runnerHand, piles } = initializeGameCards()
   await set(ref(db, `rooms/${roomId}`), {
@@ -316,7 +320,7 @@ export async function rematchRoom(roomId: string): Promise<void> {
     turnNumber: 0,
     drawsRemaining: 0,
     cardsPlacedThisTurn: 0,
-    players: room.players,
+    players,
     trail: createStartingTrail(),
     piles,
     runnerHand,

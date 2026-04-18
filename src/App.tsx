@@ -25,10 +25,12 @@ export default function App() {
     setSession(null)
   }
 
-  const handleRematch = async () => {
+  const handleRematch = async (swapRoles = false) => {
     if (!session) return
-    await rematchRoom(session.roomId)
-    // room 구독이 자동으로 새 상태를 받아 GameScreen으로 전환됨
+    await rematchRoom(session.roomId, swapRoles)
+    if (swapRoles) {
+      setSession(prev => prev ? { ...prev, myRole: prev.myRole === 'runner' ? 'chaser' : 'runner' } : null)
+    }
   }
 
   if (!session) {
@@ -52,7 +54,8 @@ export default function App() {
         chaserName={room.players.chaser?.name ?? '추격자'}
         trail={room.trail}
         onPlayAgain={handlePlayAgain}
-        onRematch={handleRematch}
+        onRematch={() => handleRematch(false)}
+        onRematchSwap={() => handleRematch(true)}
       />
     )
   }

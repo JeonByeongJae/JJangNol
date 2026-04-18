@@ -9,6 +9,7 @@ interface Props {
   trail: TrailCard[]
   onPlayAgain: () => void
   onRematch?: () => void
+  onRematchSwap?: () => void
 }
 
 export default function ResultScreen({
@@ -19,6 +20,7 @@ export default function ResultScreen({
   trail,
   onPlayAgain,
   onRematch,
+  onRematchSwap,
 }: Props) {
   const iWon = winner === myRole
   const winnerName = winner === 'runner' ? runnerName : chaserName
@@ -63,7 +65,12 @@ export default function ResultScreen({
         <div className={styles.actions}>
           {onRematch && (
             <button className={styles.rematchBtn} onClick={onRematch}>
-              같은 방 다시 하기
+              역할 유지 다시 하기
+            </button>
+          )}
+          {onRematchSwap && (
+            <button className={styles.rematchBtn} onClick={onRematchSwap}>
+              역할 바꿔서 다시 하기
             </button>
           )}
           <button className={styles.btn} onClick={onPlayAgain}>
