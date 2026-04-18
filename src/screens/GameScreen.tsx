@@ -185,7 +185,7 @@ export default function GameScreen({ room, roomId, myRole }: Props) {
       {myRole === 'chaser' && (
         <>
           <div className={styles.runnerHandCount}>
-            🏃 도망자 손패 {room.runnerHand.length}장
+            🏃 도망자 손패 {room.runnerHandCount}장
           </div>
           <ChaserBoard
             board={room.chaserBoard}

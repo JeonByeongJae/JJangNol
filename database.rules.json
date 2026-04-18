@@ -1,0 +1,16 @@
+{
+  "rules": {
+    "rooms": {
+      "$roomId": {
+        ".read": true,
+        ".write": true
+      }
+    },
+    "runnerHands": {
+      "$roomId": {
+        ".read": "auth != null && auth.uid === root.child('rooms/' + $roomId + '/players/runner/uid').val()",
+        ".write": true
+      }
+    }
+  }
+}

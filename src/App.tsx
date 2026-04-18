@@ -15,7 +15,7 @@ interface Session {
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
-  const { room, loading } = useRoom(session?.roomId ?? null)
+  const { room, loading } = useRoom(session?.roomId ?? null, session?.myRole ?? null)
 
   const handleEnterRoom = (roomId: string, myRole: Role, myName: string) => {
     setSession({ roomId, myRole, myName })
