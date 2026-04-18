@@ -44,7 +44,7 @@ export default function HomeScreen({ onEnterRoom }: Props) {
   return (
     <div className={styles.screen}>
       <div className={styles.card}>
-        <h1 className={styles.title}>RUNNER</h1>
+        <h1 className={styles.title}>FUGITIVE</h1>
         <p className={styles.subtitle}>도망자</p>
 
         <input
