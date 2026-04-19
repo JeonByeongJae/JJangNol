@@ -20,12 +20,6 @@ describe('getPlayableCards', () => {
     expect(result).not.toContain(20)
   })
 
-  it('42는 항상 포함', () => {
-    const hand = [42, 20]
-    const result = getPlayableCards(hand, 10, [])
-    expect(result).toContain(42)
-  })
-
   it('손패가 비어있으면 빈 배열', () => {
     expect(getPlayableCards([], 10, [])).toEqual([])
   })

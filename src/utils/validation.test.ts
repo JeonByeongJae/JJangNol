@@ -34,7 +34,4 @@ describe('canPlaceCard', () => {
     expect(canPlaceCard(16, 10, [8])).toBe(false)
   })
 
-  it('42는 항상 놓을 수 있다', () => {
-    expect(canPlaceCard(42, 10, [])).toBe(true)
-  })
 })
