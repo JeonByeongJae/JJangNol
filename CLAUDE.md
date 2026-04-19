@@ -1,4 +1,4 @@
-# CLAUDE.md — Runner (도망자)
+# CLAUDE.md — JJangNol (짱하의 놀이터)
 
 ## 프로젝트 개요
 

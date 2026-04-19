@@ -1,8 +1,8 @@
-# Runner (도망자)
+# JJangNol (짱하의 놀이터)
 
-> 도망가고 잡는 1vs1 추리 보드게임 — 온라인으로
+> 짱하의 온라인 보드게임 플레이그라운드
 
-**[플레이하기](https://byeongjae-jeon.github.io/Runner/)**
+**[플레이하기](https://byeongjae-jeon.github.io/JJangNol/)**
 
 ---
 
