@@ -1,81 +1,58 @@
-import { useState } from 'react'
-import { useRoom } from './hooks/useRoom'
-import type { Role } from './types/game'
-import { rematchRoom } from './firebase/roomDb'
-import HomeScreen from './screens/HomeScreen'
-import LobbyScreen from './screens/LobbyScreen'
-import GameScreen from './screens/GameScreen'
-import ResultScreen from './screens/ResultScreen'
-
-interface Session {
-  roomId: string
-  myRole: Role
-  myName: string
-}
+import { Suspense } from 'react'
+import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom'
+import { GAMES } from './games/registry'
 
 export default function App() {
-  const [session, setSession] = useState<Session | null>(null)
-  const { room, loading } = useRoom(session?.roomId ?? null)
-
-  const handleEnterRoom = (roomId: string, myRole: Role, myName: string) => {
-    setSession({ roomId, myRole, myName })
-  }
-
-  const handlePlayAgain = () => {
-    setSession(null)
-  }
-
-  const handleRematch = async (swapRoles = false) => {
-    if (!session) return
-    await rematchRoom(session.roomId, swapRoles)
-    if (swapRoles) {
-      setSession(prev => prev ? { ...prev, myRole: prev.myRole === 'runner' ? 'chaser' : 'runner' } : null)
-    }
-  }
-
-  if (!session) {
-    return <HomeScreen onEnterRoom={handleEnterRoom} />
-  }
-
-  if (loading || !room) {
-    return (
-      <div style={{ color: 'var(--color-text-muted)', padding: 24, textAlign: 'center' }}>
-        연결 중...
-      </div>
-    )
-  }
-
-  if (room.status === 'finished' && room.winner) {
-    return (
-      <ResultScreen
-        winner={room.winner}
-        myRole={session.myRole}
-        runnerName={room.players.runner?.name ?? '도망자'}
-        chaserName={room.players.chaser?.name ?? '추격자'}
-        trail={room.trail}
-        onPlayAgain={handlePlayAgain}
-        onRematch={() => handleRematch(false)}
-        onRematchSwap={() => handleRematch(true)}
-      />
-    )
-  }
-
-  if (room.status === 'playing') {
-    return (
-      <GameScreen
-        room={room}
-        roomId={session.roomId}
-        myRole={session.myRole}
-      />
-    )
-  }
-
-  // status === 'waiting'
   return (
-    <LobbyScreen
-      room={room}
-      roomId={session.roomId}
-      myRole={session.myRole}
-    />
+    <BrowserRouter basename="/JJangNol">
+      <Suspense fallback={<div style={{ color: 'var(--color-text-muted)', padding: 24, textAlign: 'center' }}>로딩 중...</div>}>
+        <Routes>
+          <Route path="/" element={<PlaygroundHome />} />
+          {GAMES.map(game => (
+            <Route
+              key={game.id}
+              path={`/games/${game.id}/*`}
+              element={<game.component />}
+            />
+          ))}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
+  )
+}
+
+function PlaygroundHome() {
+  return (
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+      <h1 style={{ color: 'var(--color-gold)', fontFamily: 'serif', marginBottom: 32 }}>짱하의 놀이터</h1>
+      <div style={{ display: 'grid', gap: 16, width: '100%', maxWidth: 400 }}>
+        {GAMES.map(game => (
+          <Link
+            key={game.id}
+            to={`/games/${game.id}`}
+            style={{ textDecoration: 'none' }}
+          >
+            <div style={{
+              background: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              borderRadius: 8,
+              padding: '20px 24px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 16,
+              cursor: 'pointer',
+              color: 'var(--color-text)',
+            }}>
+              <span style={{ fontSize: 32 }}>{game.emoji}</span>
+              <div>
+                <div style={{ fontWeight: 'bold', fontSize: 18 }}>{game.name}</div>
+                <div style={{ color: 'var(--color-text-muted)', fontSize: 14 }}>{game.players}</div>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
   )
 }
