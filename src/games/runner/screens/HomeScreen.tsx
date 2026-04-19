@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { createRoom, joinRoom } from '../firebase/roomDb'
+import { createRoom, joinRoom } from '../../../shared/firebase/roomDb'
 import type { Role } from '../types/game'
 import styles from './HomeScreen.module.css'
 

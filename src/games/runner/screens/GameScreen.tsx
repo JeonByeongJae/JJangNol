@@ -10,7 +10,7 @@ import {
   submitGuess,
   endChaserTurn,
   clearGuessAttempt,
-} from '../firebase/roomDb'
+} from '../../../shared/firebase/roomDb'
 import TurnBanner from '../components/TurnBanner'
 import CardTrail from '../components/CardTrail'
 import CardPiles from '../components/CardPiles'
