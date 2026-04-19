@@ -15,7 +15,7 @@ export function useCantStopGame(roomId: string | null, myKey: PlayerKey) {
 
   const isMyTurn = room?.turn === myKey
 
-  const combos = room?.dice.length === 4
+  const combos = room?.dice?.length === 4
     ? getDiceCombos(room.dice)
     : []
 
