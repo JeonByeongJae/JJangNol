@@ -17,4 +17,11 @@ export const GAMES: GameEntry[] = [
     players: '1대1',
     component: lazy(() => import('./runner/RunnerApp')),
   },
+  {
+    id: 'cant-stop',
+    name: "Can't Stop",
+    emoji: '⛰️',
+    players: '1대1',
+    component: lazy(() => import('./cant-stop/CantStopApp')),
+  },
 ]
