@@ -57,7 +57,7 @@ export async function applyCombo(
   for (const col of combo) {
     const key = String(col)
     const colState = room.board?.[key]
-    if (!colState || colState.locked !== null) continue
+    if (!colState || colState.locked != null) continue
     const currentPos = climbers[key] ?? (colState[player] ?? 0)
     climbers[key] = currentPos + 1
   }

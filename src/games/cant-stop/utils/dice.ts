@@ -24,7 +24,7 @@ export function isComboPlayable(
   return combo.some(col => {
     if (!COLS[col]) return false
     const colState = board[String(col)]
-    if (colState?.locked !== null) return false
+    if (colState?.locked != null) return false
     if (climbers[String(col)] !== undefined) return true
     return climberCount < 3
   })
