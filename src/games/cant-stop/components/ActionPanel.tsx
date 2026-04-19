@@ -26,8 +26,9 @@ export default function ActionPanel({
   room, isMyTurn, comboPlayable, onRoll, onSelectCombo, onStop,
 }: Props) {
   const [selectedCombo, setSelectedCombo] = useState<number | null>(null)
-  const combos = room.dice.length === 4 ? getDiceCombos(room.dice) : []
-  const splits = room.dice.length === 4 ? getComboSplits(room.dice) : []
+  const dice = room.dice ?? []
+  const combos = dice.length === 4 ? getDiceCombos(dice) : []
+  const splits = dice.length === 4 ? getComboSplits(dice) : []
   const climberCount = Object.keys(room.climbers ?? {}).length
 
   if (!isMyTurn) {
@@ -51,9 +52,9 @@ export default function ActionPanel({
 
   return (
     <div className={styles.panel}>
-      {room.dice.length === 4 && (
+      {dice.length === 4 && (
         <div className={styles.diceRow}>
-          {room.dice.map((d, i) => (
+          {dice.map((d, i) => (
             <div key={i} className={styles.die}>{d}</div>
           ))}
         </div>

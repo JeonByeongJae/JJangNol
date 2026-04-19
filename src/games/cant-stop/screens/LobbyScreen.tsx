@@ -8,6 +8,8 @@ interface Props {
 }
 
 export default function LobbyScreen({ room, roomId }: Props) {
+  const copyCode = () => navigator.clipboard.writeText(roomId)
+
   return (
     <div className={styles.screen}>
       <div className={styles.card}>
@@ -16,6 +18,7 @@ export default function LobbyScreen({ room, roomId }: Props) {
         <div>
           <p className={styles.codeLabel}>방 코드</p>
           <p className={styles.code}>{roomId}</p>
+          <button className={styles.copyBtn} onClick={copyCode}>복사</button>
         </div>
 
         <div className={styles.playerList}>
