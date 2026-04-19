@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { subscribeRoom } from '../firebase/roomDb'
-import type { GameRoom } from '../types/game'
+import type { GameRoom } from '../../games/runner/types/game'
 
 export function useRoom(roomId: string | null) {
   const [room, setRoom] = useState<GameRoom | null>(null)
