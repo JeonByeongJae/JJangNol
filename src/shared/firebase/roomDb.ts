@@ -1,18 +1,18 @@
 import { ref, set, get, update, onValue, off } from 'firebase/database'
 import { db } from './config'
-import type { GameRoom, Pile, TrailCard } from '../types/game'
+import type { GameRoom, Pile, TrailCard } from '../../games/runner/types/game'
 import {
   initializeGameCards,
   createStartingTrail,
   createInitialChaserBoard,
   generateRoomId,
-} from '../utils/cards'
-import { checkWinner } from '../utils/winCondition'
+} from '../../games/runner/utils/cards'
+import { checkWinner } from '../../games/runner/utils/winCondition'
 
 // 방 생성 (방장 = 도망자)
 export async function createRoom(runnerName: string): Promise<string> {
   const roomId = generateRoomId()
-  await set(ref(db, `rooms/${roomId}`), {
+  await set(ref(db, `rooms/runner/${roomId}`), {
     status: 'waiting',
     players: { runner: { name: runnerName } },
     winner: null,
@@ -22,7 +22,7 @@ export async function createRoom(runnerName: string): Promise<string> {
 
 // 방 참가 (두 번째 플레이어 = 추격자) → 게임 자동 시작
 export async function joinRoom(roomId: string, chaserName: string): Promise<void> {
-  const snapshot = await get(ref(db, `rooms/${roomId}`))
+  const snapshot = await get(ref(db, `rooms/runner/${roomId}`))
   if (!snapshot.exists()) throw new Error('방을 찾을 수 없습니다.')
   const room = snapshot.val() as GameRoom
   if (room.status !== 'waiting') throw new Error('이미 시작된 방입니다.')
@@ -50,7 +50,7 @@ export async function joinRoom(roomId: string, chaserName: string): Promise<void
     lastGuessResult: null,
     lastAction: null,
   }
-  await set(ref(db, `rooms/${roomId}`), gameState)
+  await set(ref(db, `rooms/runner/${roomId}`), gameState)
 }
 
 // Firebase는 배열을 숫자 키 객체로 반환하거나 빈 배열을 undefined로 반환할 수 있음
@@ -66,7 +66,7 @@ export function subscribeRoom(
   roomId: string,
   callback: (room: GameRoom | null) => void
 ): () => void {
-  const roomRef = ref(db, `rooms/${roomId}`)
+  const roomRef = ref(db, `rooms/runner/${roomId}`)
   onValue(roomRef, snapshot => {
     if (!snapshot.exists()) {
       callback(null)
@@ -96,7 +96,7 @@ export function subscribeRoom(
 
 // 더미에서 카드 뽑기
 export async function drawCard(roomId: string, pile: Pile): Promise<void> {
-  const snapshot = await get(ref(db, `rooms/${roomId}`))
+  const snapshot = await get(ref(db, `rooms/runner/${roomId}`))
   const raw = snapshot.val() as GameRoom
   const rawPilesD = (raw.piles ?? {}) as unknown as Record<string, unknown>
   const room: GameRoom = {
@@ -131,7 +131,7 @@ export async function drawCard(roomId: string, pile: Pile): Promise<void> {
   }
 
   const roleStr = isRunner ? '도망자' : '추격자'
-  await update(ref(db, `rooms/${roomId}`), {
+  await update(ref(db, `rooms/runner/${roomId}`), {
     piles,
     ...(isRunner
       ? { runnerHand: newHand }
@@ -148,7 +148,7 @@ export async function placeCard(
   cardValue: number,
   boosters: number[] = []
 ): Promise<void> {
-  const snapshot = await get(ref(db, `rooms/${roomId}`))
+  const snapshot = await get(ref(db, `rooms/runner/${roomId}`))
   const raw = snapshot.val() as GameRoom
   const room: GameRoom = {
     ...raw,
@@ -170,7 +170,7 @@ export async function placeCard(
   const winner = checkWinner(trail)
 
   const boosterStr = boosters.length > 0 ? ` (부스터 ${boosters.length}장)` : ''
-  await update(ref(db, `rooms/${roomId}`), {
+  await update(ref(db, `rooms/runner/${roomId}`), {
     runnerHand: hand,
     trail,
     cardsPlacedThisTurn: (room.cardsPlacedThisTurn ?? 0) + 1,
@@ -181,11 +181,11 @@ export async function placeCard(
 
 // 도망자 턴 종료 → 추격자 턴
 export async function endRunnerTurn(roomId: string, lastAction?: string): Promise<void> {
-  const snapshot = await get(ref(db, `rooms/${roomId}`))
+  const snapshot = await get(ref(db, `rooms/runner/${roomId}`))
   const room = snapshot.val() as GameRoom
   const nextTurnNumber = room.turnNumber + 1
 
-  await update(ref(db, `rooms/${roomId}`), {
+  await update(ref(db, `rooms/runner/${roomId}`), {
     turn: 'chaser',
     phase: 'draw',
     turnNumber: nextTurnNumber,
@@ -208,7 +208,7 @@ export async function toggleGuess(
   trailIndex: number,
   value: number
 ): Promise<void> {
-  const snapshot = await get(ref(db, `rooms/${roomId}`))
+  const snapshot = await get(ref(db, `rooms/runner/${roomId}`))
   const raw = snapshot.val() as GameRoom
   const room: GameRoom = { ...raw, guessAttempt: raw.guessAttempt ?? [], trail: raw.trail ?? [], runnerHand: raw.runnerHand ?? [], chaserHand: raw.chaserHand ?? [] }
   const existing = room.guessAttempt.findIndex(g => g.trailIndex === trailIndex)
@@ -217,12 +217,12 @@ export async function toggleGuess(
       ? room.guessAttempt.filter((_, i) => i !== existing)
       : [...room.guessAttempt, { trailIndex, value }]
 
-  await update(ref(db, `rooms/${roomId}`), { guessAttempt })
+  await update(ref(db, `rooms/runner/${roomId}`), { guessAttempt })
 }
 
 // 추격자: 추리 제출 — 맞으면 true, 틀리면 false 반환
 export async function submitGuess(roomId: string): Promise<boolean> {
-  const snapshot = await get(ref(db, `rooms/${roomId}`))
+  const snapshot = await get(ref(db, `rooms/runner/${roomId}`))
   const raw = snapshot.val() as GameRoom
   const room: GameRoom = {
     ...raw,
@@ -256,7 +256,7 @@ export async function submitGuess(roomId: string): Promise<boolean> {
     })
     const winner = checkWinner(trail)
 
-    await update(ref(db, `rooms/${roomId}`), {
+    await update(ref(db, `rooms/runner/${roomId}`), {
       trail,
       chaserBoard,
       guessAttempt: [],
@@ -268,7 +268,7 @@ export async function submitGuess(roomId: string): Promise<boolean> {
     })
     return true
   } else {
-    await update(ref(db, `rooms/${roomId}`), {
+    await update(ref(db, `rooms/runner/${roomId}`), {
       guessAttempt: [],
       lastGuessResult: 'wrong',
       lastAction: '추격자가 추리에 실패했습니다',
@@ -283,15 +283,15 @@ export async function submitGuess(roomId: string): Promise<boolean> {
 
 // 추격자: 추리 초기화 (제출 없이 선택 취소)
 export async function clearGuessAttempt(roomId: string): Promise<void> {
-  await update(ref(db, `rooms/${roomId}`), { guessAttempt: [] })
+  await update(ref(db, `rooms/runner/${roomId}`), { guessAttempt: [] })
 }
 
 // 추격자 턴 종료 → 도망자 턴
 export async function endChaserTurn(roomId: string): Promise<void> {
-  const snapshot = await get(ref(db, `rooms/${roomId}`))
+  const snapshot = await get(ref(db, `rooms/runner/${roomId}`))
   const room = snapshot.val() as GameRoom
 
-  await update(ref(db, `rooms/${roomId}`), {
+  await update(ref(db, `rooms/runner/${roomId}`), {
     turn: 'runner',
     phase: 'draw',
     turnNumber: room.turnNumber + 1,
@@ -304,7 +304,7 @@ export async function endChaserTurn(roomId: string): Promise<void> {
 
 // 같은 방에서 다시 게임
 export async function rematchRoom(roomId: string, swapRoles = false): Promise<void> {
-  const snapshot = await get(ref(db, `rooms/${roomId}`))
+  const snapshot = await get(ref(db, `rooms/runner/${roomId}`))
   if (!snapshot.exists()) throw new Error('방을 찾을 수 없습니다.')
   const room = snapshot.val() as GameRoom
 
@@ -313,7 +313,7 @@ export async function rematchRoom(roomId: string, swapRoles = false): Promise<vo
     : room.players
 
   const { runnerHand, piles } = initializeGameCards()
-  await set(ref(db, `rooms/${roomId}`), {
+  await set(ref(db, `rooms/runner/${roomId}`), {
     status: 'playing',
     turn: 'runner',
     phase: 'action',
