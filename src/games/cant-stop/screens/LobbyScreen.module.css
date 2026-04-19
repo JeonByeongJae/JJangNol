@@ -1,0 +1,31 @@
+/* src/games/cant-stop/screens/LobbyScreen.module.css */
+.screen {
+  min-height: 100vh;
+  background: #2c1810;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.card {
+  background: #1a0e08;
+  border: 2px solid #8a6a30;
+  border-radius: 16px;
+  padding: 32px 24px;
+  width: 100%; max-width: 360px;
+  display: flex; flex-direction: column; gap: 20px;
+  text-align: center;
+}
+.title { font-size: 22px; font-weight: bold; color: #c8a45a; }
+.codeLabel { font-size: 13px; color: #a08060; }
+.code {
+  font-size: 36px; font-weight: bold; color: #f5e6c8;
+  letter-spacing: 8px; font-family: monospace;
+}
+.waiting { font-size: 14px; color: #a08060; }
+.playerList { display: flex; flex-direction: column; gap: 8px; }
+.player {
+  background: #2c1810; border: 1px solid #3d2415;
+  border-radius: 8px; padding: 10px 16px;
+  display: flex; justify-content: space-between; align-items: center;
+  color: #f5e6c8; font-size: 15px;
+}
+.playerReady { color: #c8a45a; font-size: 12px; }
