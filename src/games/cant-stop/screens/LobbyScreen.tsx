@@ -1,11 +1,10 @@
 // src/games/cant-stop/screens/LobbyScreen.tsx
-import type { CantStopRoomState, PlayerKey } from '../types'
+import type { CantStopRoomState } from '../types'
 import styles from './LobbyScreen.module.css'
 
 interface Props {
   room: CantStopRoomState
   roomId: string
-  myKey: PlayerKey
 }
 
 export default function LobbyScreen({ room, roomId }: Props) {
