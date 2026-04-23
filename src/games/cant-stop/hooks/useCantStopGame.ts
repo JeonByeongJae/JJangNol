@@ -27,7 +27,6 @@ export function useCantStopGame(roomId: string | null, myKey: PlayerKey) {
 
   const hasPlayableCombo = comboPlayable.some(Boolean)
 
-  // 주사위를 굴렸는데 가능한 조합이 없으면 자동 bust
   useEffect(() => {
     if (!roomId || !isMyTurn || !room) return
     if (!room.rolledThisTurn) return

@@ -11,7 +11,6 @@ interface Props {
   onStop: (comboIdx: number | null) => void
 }
 
-// Returns the two pairs for each combo split
 function getComboSplits(dice: number[]): [string, string][] {
   const [d1, d2, d3, d4] = dice
   return [
@@ -52,6 +51,8 @@ export default function ActionPanel({
     onStop(selectedCombo)
     setSelectedCombo(null)
   }
+
+  const mustSelectCombo = combos.length > 0 && selectedCombo === null
 
   return (
     <div className={styles.panel}>
@@ -94,14 +95,14 @@ export default function ActionPanel({
         <button
           className={`${styles.btn} ${styles.btnStop}`}
           onClick={handleStop}
-          disabled={climberCount === 0 || (combos.length > 0 && selectedCombo === null)}
+          disabled={climberCount === 0 || mustSelectCombo}
         >
           ✓ 베이스캠프
         </button>
         <button
           className={`${styles.btn} ${styles.btnRoll}`}
           onClick={handleRoll}
-          disabled={combos.length > 0 && selectedCombo === null}
+          disabled={mustSelectCombo}
         >
           🎲 {room.rolledThisTurn ? '계속 굴리기' : '주사위 굴리기'}
         </button>

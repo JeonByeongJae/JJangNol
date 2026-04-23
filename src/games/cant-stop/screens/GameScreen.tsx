@@ -1,4 +1,3 @@
-// src/games/cant-stop/screens/GameScreen.tsx
 import { useCantStopGame } from '../hooks/useCantStopGame'
 import MountainBoard from '../components/MountainBoard'
 import ActionPanel from '../components/ActionPanel'
