@@ -1,11 +1,31 @@
 import { ref, set, get, update, onValue, off } from 'firebase/database'
 import { db } from './config'
-import type { CantStopRoomState, PlayerKey } from '../../games/cant-stop/types'
+import type { CantStopRoomState, ColumnState, PlayerKey } from '../../games/cant-stop/types'
 import { initBoard, COLS, isVictory } from '../../games/cant-stop/utils/columns'
 import { rollDice } from '../../games/cant-stop/utils/dice'
 
 function generateRoomId(): string {
   return Math.random().toString(36).slice(2, 8).toUpperCase()
+}
+
+function calcClimbers(
+  base: Record<string, number>,
+  board: Record<string, ColumnState>,
+  player: PlayerKey,
+  combo: [number, number]
+): Record<string, number> {
+  const c = { ...base }
+  for (const col of combo) {
+    const key = String(col)
+    const colState = board[key]
+    if (!colState || colState.locked != null) continue
+    if (c[key] !== undefined) {
+      c[key] += 1
+    } else if (Object.keys(c).length < 3) {
+      c[key] = (colState[player] ?? 0) + 1
+    }
+  }
+  return c
 }
 
 export async function createRoom(hostName: string): Promise<string> {
@@ -37,44 +57,35 @@ export async function joinRoom(roomId: string, guestName: string): Promise<void>
   })
 }
 
-export async function rollDiceAction(roomId: string): Promise<void> {
-  const dice = rollDice()
-  await update(ref(db, `rooms/cant-stop/${roomId}`), {
-    dice,
-    rolledThisTurn: true,
-  })
-}
-
-export async function applyCombo(
+export async function rollDiceAction(
   roomId: string,
-  combo: [number, number]
+  combo?: [number, number]
 ): Promise<void> {
+  const dice = rollDice()
+  if (!combo) {
+    await update(ref(db, `rooms/cant-stop/${roomId}`), { dice, rolledThisTurn: true })
+    return
+  }
   const snap = await get(ref(db, `rooms/cant-stop/${roomId}`))
   const room = snap.val() as CantStopRoomState
-  const climbers: Record<string, number> = { ...(room.climbers ?? {}) }
-  const player = room.turn as PlayerKey
-
-  for (const col of combo) {
-    const key = String(col)
-    const colState = room.board?.[key]
-    if (!colState || colState.locked != null) continue
-    if (climbers[key] !== undefined) {
-      climbers[key] += 1
-    } else if (Object.keys(climbers).length < 3) {
-      climbers[key] = (colState[player] ?? 0) + 1
-    }
-  }
-
-  await update(ref(db, `rooms/cant-stop/${roomId}`), { climbers })
+  const climbers = calcClimbers(room.climbers ?? {}, room.board, room.turn as PlayerKey, combo)
+  await update(ref(db, `rooms/cant-stop/${roomId}`), { climbers, dice, rolledThisTurn: true })
 }
 
-export async function stopClimbing(roomId: string): Promise<void> {
+export async function stopClimbing(
+  roomId: string,
+  combo?: [number, number]
+): Promise<void> {
   const snap = await get(ref(db, `rooms/cant-stop/${roomId}`))
   const room = snap.val() as CantStopRoomState
   const player = room.turn as PlayerKey
   const board = JSON.parse(JSON.stringify(room.board)) as CantStopRoomState['board']
 
-  for (const [key, pos] of Object.entries(room.climbers ?? {})) {
+  const climbers = combo
+    ? calcClimbers(room.climbers ?? {}, room.board, player, combo)
+    : { ...(room.climbers ?? {}) }
+
+  for (const [key, pos] of Object.entries(climbers)) {
     const col = Number(key)
     board[key][player] = pos
     if (pos >= COLS[col]) {

@@ -3,7 +3,6 @@ import { useRoom } from '../../../shared/hooks/useRoom'
 import {
   subscribeRoom,
   rollDiceAction,
-  applyCombo,
   stopClimbing,
   bust,
 } from '../../../shared/firebase/cantStopDb'
@@ -29,14 +28,14 @@ export function useCantStopGame(roomId: string | null, myKey: PlayerKey) {
 
   const handleRoll = useCallback(async (comboIdx: number | null) => {
     if (!roomId || !isMyTurn || !room) return
-    if (comboIdx !== null) await applyCombo(roomId, combos[comboIdx])
-    await rollDiceAction(roomId)
+    const combo = comboIdx !== null ? combos[comboIdx] : undefined
+    await rollDiceAction(roomId, combo)
   }, [roomId, isMyTurn, room, combos])
 
   const handleStop = useCallback(async (comboIdx: number | null) => {
     if (!roomId || !isMyTurn || !room) return
-    if (comboIdx !== null) await applyCombo(roomId, combos[comboIdx])
-    await stopClimbing(roomId)
+    const combo = comboIdx !== null ? combos[comboIdx] : undefined
+    await stopClimbing(roomId, combo)
   }, [roomId, isMyTurn, room, combos])
 
   const handleBust = useCallback(async () => {

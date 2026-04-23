@@ -138,7 +138,7 @@ export default function ActionPanel({
           onClick={handleStop}
           disabled={climberCount === 0 || mustSelectCombo}
         >
-          ✓ 베이스캠프
+          ✓ 캠프 확정
         </button>
         <button
           className={`${styles.btn} ${styles.btnRoll}`}
