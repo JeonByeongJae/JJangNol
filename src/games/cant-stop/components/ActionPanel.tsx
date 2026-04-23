@@ -136,7 +136,7 @@ export default function ActionPanel({
         <button
           className={`${styles.btn} ${styles.btnStop}`}
           onClick={handleStop}
-          disabled={climberCount === 0 || mustSelectCombo}
+          disabled={mustSelectCombo || (climberCount === 0 && selectedCombo === null)}
         >
           ✓ 캠프 확정
         </button>
