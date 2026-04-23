@@ -27,7 +27,6 @@ export function useCantStopGame(roomId: string | null, myKey: PlayerKey) {
 
   const hasPlayableCombo = comboPlayable.some(Boolean)
 
-  // 주사위를 굴렸는데 가능한 조합이 없으면 자동 bust
   useEffect(() => {
     if (!roomId || !isMyTurn || !room) return
     if (!room.rolledThisTurn) return
@@ -37,20 +36,17 @@ export function useCantStopGame(roomId: string | null, myKey: PlayerKey) {
     }
   }, [room?.rolledThisTurn, hasPlayableCombo, roomId, isMyTurn])
 
-  const handleRoll = useCallback(async () => {
-    if (!roomId || !isMyTurn) return
-    await rollDiceAction(roomId)
-  }, [roomId, isMyTurn])
-
-  const handleSelectCombo = useCallback(async (idx: number) => {
+  const handleRoll = useCallback(async (comboIdx: number | null) => {
     if (!roomId || !isMyTurn || !room) return
-    await applyCombo(roomId, combos[idx])
+    if (comboIdx !== null) await applyCombo(roomId, combos[comboIdx])
+    await rollDiceAction(roomId)
   }, [roomId, isMyTurn, room, combos])
 
-  const handleStop = useCallback(async () => {
-    if (!roomId || !isMyTurn) return
+  const handleStop = useCallback(async (comboIdx: number | null) => {
+    if (!roomId || !isMyTurn || !room) return
+    if (comboIdx !== null) await applyCombo(roomId, combos[comboIdx])
     await stopClimbing(roomId)
-  }, [roomId, isMyTurn])
+  }, [roomId, isMyTurn, room, combos])
 
   const handleBust = useCallback(async () => {
     if (!roomId) return
@@ -65,7 +61,6 @@ export function useCantStopGame(roomId: string | null, myKey: PlayerKey) {
     comboPlayable,
     hasPlayableCombo,
     handleRoll,
-    handleSelectCombo,
     handleStop,
     handleBust,
   }

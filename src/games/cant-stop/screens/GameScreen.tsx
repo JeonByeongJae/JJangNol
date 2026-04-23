@@ -1,4 +1,3 @@
-// src/games/cant-stop/screens/GameScreen.tsx
 import { useCantStopGame } from '../hooks/useCantStopGame'
 import MountainBoard from '../components/MountainBoard'
 import ActionPanel from '../components/ActionPanel'
@@ -14,7 +13,7 @@ export default function GameScreen({ roomId, myKey }: Props) {
   const {
     room, loading, isMyTurn,
     comboPlayable,
-    handleRoll, handleSelectCombo, handleStop,
+    handleRoll, handleStop,
   } = useCantStopGame(roomId, myKey)
 
   if (loading || !room) {
@@ -36,7 +35,6 @@ export default function GameScreen({ roomId, myKey }: Props) {
           isMyTurn={isMyTurn}
           comboPlayable={comboPlayable}
           onRoll={handleRoll}
-          onSelectCombo={handleSelectCombo}
           onStop={handleStop}
         />
       </div>

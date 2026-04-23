@@ -65,11 +65,7 @@ export async function applyCombo(
     }
   }
 
-  await update(ref(db, `rooms/cant-stop/${roomId}`), {
-    climbers,
-    dice: [],
-    rolledThisTurn: false,
-  })
+  await update(ref(db, `rooms/cant-stop/${roomId}`), { climbers })
 }
 
 export async function stopClimbing(roomId: string): Promise<void> {
