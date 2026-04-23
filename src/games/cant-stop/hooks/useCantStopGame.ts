@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { useRoom } from '../../../shared/hooks/useRoom'
 import {
   subscribeRoom,
@@ -26,15 +26,6 @@ export function useCantStopGame(roomId: string | null, myKey: PlayerKey) {
   )
 
   const hasPlayableCombo = comboPlayable.some(Boolean)
-
-  useEffect(() => {
-    if (!roomId || !isMyTurn || !room) return
-    if (!room.rolledThisTurn) return
-    if (combos.length === 0) return
-    if (!hasPlayableCombo) {
-      bust(roomId)
-    }
-  }, [room?.rolledThisTurn, hasPlayableCombo, roomId, isMyTurn])
 
   const handleRoll = useCallback(async (comboIdx: number | null) => {
     if (!roomId || !isMyTurn || !room) return

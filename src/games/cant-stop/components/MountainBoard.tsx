@@ -27,9 +27,10 @@ function TentSVG({ color }: { color: 'green' | 'red' }) {
 interface Props {
   room: CantStopRoomState
   myKey: PlayerKey
+  previewPositions?: Record<string, number>
 }
 
-export default function MountainBoard({ room, myKey }: Props) {
+export default function MountainBoard({ room, myKey, previewPositions = {} }: Props) {
   const oppKey: PlayerKey = myKey === 'host' ? 'guest' : 'host'
 
   return (
@@ -39,24 +40,28 @@ export default function MountainBoard({ room, myKey }: Props) {
         const key = String(col)
         const colState = room.board[key]
         const hasClimber = room.climbers?.[key] !== undefined
+        const hasPreview = previewPositions[key] !== undefined
 
         return (
           <div key={col} className={styles.column}>
             {Array.from({ length: size }, (_, i) => {
-              const pos = size - i  // top = size, bottom = 1
+              const pos = size - i
               const isTop = pos === size
               const climberPos = room.climbers?.[key]
+              const previewPos = previewPositions[key]
               const myBasePos = colState?.[myKey] ?? 0
               const oppBasePos = colState?.[oppKey] ?? 0
               const locked = colState?.locked
 
               const isClimber = climberPos === pos
-              const isMyBase = !isClimber && myBasePos === pos
-              const isOppBase = !isClimber && !isMyBase && oppBasePos === pos
+              const isPreview = !isClimber && previewPos === pos
+              const isMyBase = !isClimber && !isPreview && myBasePos === pos
+              const isOppBase = !isClimber && !isPreview && !isMyBase && oppBasePos === pos
 
               let cellClass = styles.cell
               if (isTop) cellClass += ` ${styles.cellTop}`
               if (isClimber) cellClass += ` ${styles.cellClimber}`
+              else if (isPreview) cellClass += ` ${styles.cellPreview}`
               else if (isMyBase) cellClass += ` ${styles.cellMyBase}`
               else if (isOppBase) cellClass += ` ${styles.cellOppBase}`
               if (locked) cellClass += ` ${styles.cellLocked}`
@@ -69,7 +74,7 @@ export default function MountainBoard({ room, myKey }: Props) {
                 </div>
               )
             })}
-            <div className={`${styles.colLabel}${hasClimber ? ` ${styles.colLabelActive}` : ''}`}>
+            <div className={`${styles.colLabel}${(hasClimber || hasPreview) ? ` ${styles.colLabelActive}` : ''}`}>
               {col}
             </div>
           </div>

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import type { CantStopRoomState } from '../types'
 import { getDiceCombos } from '../utils/dice'
 import styles from './ActionPanel.module.css'
@@ -7,8 +6,12 @@ interface Props {
   room: CantStopRoomState
   isMyTurn: boolean
   comboPlayable: boolean[]
+  hasPlayableCombo: boolean
+  selectedCombo: number | null
+  onSelectCombo: (idx: number | null) => void
   onRoll: (comboIdx: number | null) => void
   onStop: (comboIdx: number | null) => void
+  onBust: () => void
 }
 
 function getComboSplits(dice: number[]): [string, string][] {
@@ -21,35 +24,73 @@ function getComboSplits(dice: number[]): [string, string][] {
 }
 
 export default function ActionPanel({
-  room, isMyTurn, comboPlayable, onRoll, onStop,
+  room, isMyTurn, comboPlayable, hasPlayableCombo,
+  selectedCombo, onSelectCombo, onRoll, onStop, onBust,
 }: Props) {
-  const [selectedCombo, setSelectedCombo] = useState<number | null>(null)
   const dice = room.dice ?? []
   const combos = dice.length === 4 ? getDiceCombos(dice) : []
   const splits = dice.length === 4 ? getComboSplits(dice) : []
   const climberCount = Object.keys(room.climbers ?? {}).length
+  const isBust = room.rolledThisTurn && combos.length > 0 && !hasPlayableCombo
 
   if (!isMyTurn) {
     return (
       <div className={styles.panel}>
+        {dice.length === 4 && (
+          <div className={styles.diceRow}>
+            {dice.map((d, i) => (
+              <div key={i} className={styles.die}>{d}</div>
+            ))}
+          </div>
+        )}
+        {combos.length > 0 && (
+          <div className={styles.combos}>
+            {combos.map((combo, idx) => (
+              <div key={idx} className={`${styles.comboCard} ${styles.comboCardDisabled}`}>
+                <div className={styles.comboSum}>{combo[0]} + {combo[1]}</div>
+                <div className={styles.comboDetail}>
+                  ({splits[idx][0]}) · ({splits[idx][1]})
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         <p className={styles.waitMsg}>상대방 차례입니다...</p>
+      </div>
+    )
+  }
+
+  if (isBust) {
+    return (
+      <div className={styles.panel}>
+        <div className={styles.diceRow}>
+          {dice.map((d, i) => (
+            <div key={i} className={styles.die}>{d}</div>
+          ))}
+        </div>
+        <p className={styles.bustMsg}>가능한 조합이 없습니다!</p>
+        <div className={styles.btnRow}>
+          <button className={`${styles.btn} ${styles.btnBust}`} onClick={onBust}>
+            차례 넘기기
+          </button>
+        </div>
       </div>
     )
   }
 
   const handleComboClick = (idx: number) => {
     if (!comboPlayable[idx]) return
-    setSelectedCombo(idx === selectedCombo ? null : idx)
+    onSelectCombo(idx === selectedCombo ? null : idx)
   }
 
   const handleRoll = () => {
     onRoll(selectedCombo)
-    setSelectedCombo(null)
+    onSelectCombo(null)
   }
 
   const handleStop = () => {
     onStop(selectedCombo)
-    setSelectedCombo(null)
+    onSelectCombo(null)
   }
 
   const mustSelectCombo = combos.length > 0 && selectedCombo === null
