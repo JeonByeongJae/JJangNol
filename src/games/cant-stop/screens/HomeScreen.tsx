@@ -4,7 +4,7 @@ import type { PlayerKey } from '../types'
 import styles from './HomeScreen.module.css'
 
 interface Props {
-  onEnterRoom: (roomId: string, myKey: PlayerKey, myName: string) => void
+  onEnterRoom: (roomId: string, myKey: PlayerKey) => void
 }
 
 export default function HomeScreen({ onEnterRoom }: Props) {
@@ -18,7 +18,7 @@ export default function HomeScreen({ onEnterRoom }: Props) {
     setLoading(true)
     try {
       const roomId = await createRoom(name.trim())
-      onEnterRoom(roomId, 'host', name.trim())
+      onEnterRoom(roomId, 'host')
     } catch {
       setError('방 생성에 실패했습니다')
     } finally {
@@ -33,7 +33,7 @@ export default function HomeScreen({ onEnterRoom }: Props) {
     try {
       const code = joinCode.trim().toUpperCase()
       await joinRoom(code, name.trim())
-      onEnterRoom(code, 'guest', name.trim())
+      onEnterRoom(code, 'guest')
     } catch (e) {
       setError(e instanceof Error ? e.message : '방 참가에 실패했습니다')
     } finally {
