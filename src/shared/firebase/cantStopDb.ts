@@ -58,11 +58,18 @@ export async function applyCombo(
     const key = String(col)
     const colState = room.board?.[key]
     if (!colState || colState.locked != null) continue
-    const currentPos = climbers[key] ?? (colState[player] ?? 0)
-    climbers[key] = currentPos + 1
+    if (climbers[key] !== undefined) {
+      climbers[key] += 1
+    } else if (Object.keys(climbers).length < 3) {
+      climbers[key] = (colState[player] ?? 0) + 1
+    }
   }
 
-  await update(ref(db, `rooms/cant-stop/${roomId}`), { climbers })
+  await update(ref(db, `rooms/cant-stop/${roomId}`), {
+    climbers,
+    dice: [],
+    rolledThisTurn: false,
+  })
 }
 
 export async function stopClimbing(roomId: string): Promise<void> {
