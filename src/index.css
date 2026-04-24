@@ -1,4 +1,5 @@
 :root {
+  /* Runner (board game) tokens — kept for runner game */
   --color-bg: #2c1810;
   --color-surface: #1a0e08;
   --color-card-face: #5c3a1e;
@@ -16,6 +17,31 @@
   --card-radius: 5px;
   --max-width: 480px;
   --font-base: 15px;
+
+  /* Starbucks design system tokens — used by cant-stop game */
+  --sbx-font: 'Inter', 'Noto Sans KR', 'Helvetica Neue', Arial, sans-serif;
+  --sbx-canvas: #f2f0eb;
+  --sbx-ceramic: #edebe9;
+  --sbx-surface: #ffffff;
+  --sbx-neutral-cool: #f9f9f9;
+  --sbx-green: #006241;
+  --sbx-accent: #00754A;
+  --sbx-house: #1E3932;
+  --sbx-uplift: #2b5148;
+  --sbx-green-light: #d4e9e2;
+  --sbx-gold: #cba258;
+  --sbx-gold-light: #dfc49d;
+  --sbx-gold-lightest: #faf6ee;
+  --sbx-text: rgba(0, 0, 0, 0.87);
+  --sbx-text-soft: rgba(0, 0, 0, 0.58);
+  --sbx-text-white: rgba(255, 255, 255, 1);
+  --sbx-text-white-soft: rgba(255, 255, 255, 0.70);
+  --sbx-red: #c82014;
+  --sbx-btn-radius: 50px;
+  --sbx-card-radius: 12px;
+  --sbx-shadow-card: 0 0 0.5px rgba(0,0,0,0.14), 0 1px 1px rgba(0,0,0,0.24);
+  --sbx-shadow-nav: 0 1px 3px rgba(0,0,0,0.1), 0 2px 2px rgba(0,0,0,0.06), 0 0 2px rgba(0,0,0,0.07);
+  --sbx-letter-spacing: -0.01em;
 }
 
 @media (min-width: 768px) {

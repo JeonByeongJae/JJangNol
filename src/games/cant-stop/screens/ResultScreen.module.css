@@ -1,25 +1,60 @@
-/* src/games/cant-stop/screens/ResultScreen.module.css */
 .screen {
   min-height: 100vh;
-  background: #2c1810;
-  display: flex; align-items: center; justify-content: center;
+  background: var(--sbx-canvas);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 24px;
+  font-family: var(--sbx-font);
 }
+
 .card {
-  background: #1a0e08;
-  border: 2px solid #8a6a30;
-  border-radius: 16px;
+  background: var(--sbx-surface);
+  border-radius: var(--sbx-card-radius);
+  box-shadow: var(--sbx-shadow-card);
   padding: 40px 24px;
-  width: 100%; max-width: 360px;
-  display: flex; flex-direction: column; gap: 20px;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   text-align: center;
 }
-.resultTitle { font-size: 32px; font-weight: bold; }
-.win  { color: #c8a45a; }
-.lose { color: #a08060; }
-.message { font-size: 16px; color: #f5e6c8; }
+
+.resultTitle {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: var(--sbx-letter-spacing);
+}
+
+.win {
+  color: var(--sbx-green);
+}
+
+.lose {
+  color: var(--sbx-text-soft);
+}
+
+.message {
+  font-size: 16px;
+  color: var(--sbx-text);
+  letter-spacing: var(--sbx-letter-spacing);
+}
+
 .playAgainBtn {
-  background: #3a2010; border: 1.5px solid #c8a45a; border-radius: 10px;
-  color: #c8a45a; font-size: 15px; font-weight: bold;
-  padding: 12px 0; cursor: pointer;
+  background: var(--sbx-accent);
+  border: 1px solid var(--sbx-accent);
+  border-radius: var(--sbx-btn-radius);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--sbx-font);
+  letter-spacing: var(--sbx-letter-spacing);
+  padding: 12px 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.playAgainBtn:active {
+  transform: scale(0.95);
 }

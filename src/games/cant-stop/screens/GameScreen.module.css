@@ -1,20 +1,21 @@
 .screen {
   min-height: 100vh;
-  background: #2c1810;
+  background: var(--sbx-canvas);
   display: flex;
   flex-direction: column;
-  color: #f5e6c8;
-  font-family: -apple-system, sans-serif;
+  color: var(--sbx-text);
+  font-family: var(--sbx-font);
 }
 
 .banner {
-  background: #1a0e08;
-  border-bottom: 2px solid #c8a45a;
+  background: var(--sbx-house);
+  box-shadow: var(--sbx-shadow-nav);
   padding: 12px 16px;
   text-align: center;
   font-size: 15px;
-  font-weight: bold;
-  color: #c8a45a;
+  font-weight: 600;
+  color: var(--sbx-text-white);
+  letter-spacing: var(--sbx-letter-spacing);
   flex-shrink: 0;
 }
 

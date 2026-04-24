@@ -1,45 +1,152 @@
-/* src/games/cant-stop/components/ActionPanel.module.css */
 .panel {
-  background: #1a0e08;
-  border-top: 2px solid #8a6a30;
+  background: var(--sbx-surface);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: var(--sbx-shadow-nav);
   padding: 14px 16px;
-  display: flex; flex-direction: column; gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family: var(--sbx-font);
 }
-.diceRow { display: flex; gap: 10px; justify-content: center; }
+
+.diceRow {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
 .die {
-  width: 48px; height: 48px;
-  background: #5c3a1e; border: 2px solid #8a6a30; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 24px; font-weight: bold; color: #f5e6c8;
+  width: 48px;
+  height: 48px;
+  background: var(--sbx-house);
+  border: none;
+  border-radius: var(--sbx-card-radius);
+  box-shadow: var(--sbx-shadow-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--sbx-text-white);
+  letter-spacing: var(--sbx-letter-spacing);
 }
-.combos { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+.combos {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 .comboCard {
-  background: #2c1810; border: 2px solid #555;
-  border-radius: 10px; padding: 8px 16px; text-align: center; cursor: pointer;
-  transition: border-color 0.1s;
+  background: var(--sbx-surface);
+  border: 1.5px solid rgba(0, 0, 0, 0.18);
+  border-radius: var(--sbx-card-radius);
+  padding: 8px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  box-shadow: var(--sbx-shadow-card);
 }
-.comboCard:hover:not(.comboCardDisabled) { border-color: #8a6a30; }
-.comboCardSelected { border-color: #c8a45a !important; background: #3a2010; }
-.comboCardDisabled { opacity: 0.3; cursor: default; }
-.comboSum { font-size: 18px; font-weight: bold; color: #f5e6c8; }
-.comboSumSelected { color: #c8a45a; }
-.comboDetail { font-size: 11px; color: #a08060; margin-top: 2px; }
-.btnRow { display: flex; gap: 10px; }
+
+.comboCard:hover:not(.comboCardDisabled) {
+  border-color: var(--sbx-accent);
+}
+
+.comboCardSelected {
+  border-color: var(--sbx-accent) !important;
+  background: var(--sbx-green-light);
+}
+
+.comboCardDisabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.comboSum {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--sbx-text);
+  letter-spacing: var(--sbx-letter-spacing);
+}
+
+.comboSumSelected {
+  color: var(--sbx-accent);
+}
+
+.comboDetail {
+  font-size: 11px;
+  color: var(--sbx-text-soft);
+  margin-top: 2px;
+  letter-spacing: var(--sbx-letter-spacing);
+}
+
+.btnRow {
+  display: flex;
+  gap: 10px;
+}
+
 .btn {
-  flex: 1; padding: 12px 0; border-radius: 10px;
-  border: none; font-size: 15px; font-weight: bold; cursor: pointer;
+  flex: 1;
+  padding: 12px 0;
+  border-radius: var(--sbx-btn-radius);
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--sbx-font);
+  letter-spacing: var(--sbx-letter-spacing);
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
-.btn:disabled { opacity: 0.4; cursor: default; }
-.btnStop { background: #1d4a1d; color: #6ddf6d; border: 1.5px solid #3db83d; }
-.btnRoll { background: #4a1a1a; color: #df6d6d; border: 1.5px solid #cc3333; }
-.waitMsg { text-align: center; color: #a08060; font-size: 14px; padding: 8px 0; }
-.bustMsg { text-align: center; color: #df6d6d; font-size: 15px; font-weight: bold; padding: 8px 0; }
-.btnBust { background: #3a1a1a; color: #df6d6d; border: 1.5px solid #cc3333; }
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  transform: none !important;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.btnStop {
+  background: var(--sbx-accent);
+  color: #ffffff;
+  border: 1px solid var(--sbx-accent);
+}
+
+.btnRoll {
+  background: transparent;
+  color: var(--sbx-accent);
+  border: 1.5px solid var(--sbx-accent);
+}
+
+.waitMsg {
+  text-align: center;
+  color: var(--sbx-text-soft);
+  font-size: 14px;
+  padding: 8px 0;
+  letter-spacing: var(--sbx-letter-spacing);
+}
+
+.bustMsg {
+  text-align: center;
+  color: var(--sbx-red);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 8px 0;
+  letter-spacing: var(--sbx-letter-spacing);
+}
+
+.btnBust {
+  background: transparent;
+  color: var(--sbx-red);
+  border: 1.5px solid var(--sbx-red);
+}
 
 @media (min-width: 768px) {
   .panel {
     border-top: none;
-    border-left: 2px solid #8a6a30;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
     width: 300px;
     flex-shrink: 0;
     padding: 24px 20px;
