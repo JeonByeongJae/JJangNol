@@ -73,11 +73,12 @@ html, body, #root {
 }
 
 body {
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-family: 'Noto Serif KR', Georgia, serif;
+  background: var(--sbx-canvas);
+  color: var(--sbx-text);
+  font-family: var(--sbx-font);
   font-size: var(--font-base);
   -webkit-font-smoothing: antialiased;
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 #root {

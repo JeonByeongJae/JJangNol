@@ -1,14 +1,15 @@
 .section {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
+  background: var(--sbx-surface);
+  border-radius: var(--sbx-card-radius);
+  box-shadow: var(--sbx-shadow-card);
   padding: 10px;
 }
 
 .label {
-  color: var(--color-gold);
+  color: var(--sbx-green);
   font-size: 12px;
-  letter-spacing: 1px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   margin-bottom: 8px;
 }
 
@@ -19,31 +20,33 @@
 }
 
 .cell {
-  background: #2a1a08;
-  border: 1px solid var(--color-border-dim);
-  border-radius: 3px;
+  background: var(--sbx-ceramic);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 4px;
   padding: 7px 0;
-  color: var(--color-gold);
+  color: var(--sbx-text);
   font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.1s;
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 .cell:hover {
-  background: #3a2a18;
+  background: var(--sbx-green-light);
 }
 
 .eliminated {
-  background: #3a1a1a;
-  border-color: var(--color-danger);
-  color: #cc6666;
+  background: rgba(200, 32, 20, 0.1);
+  border-color: var(--sbx-red);
+  color: var(--sbx-red);
   text-decoration: line-through;
 }
 
 .correct {
-  background: #1a3a1a;
-  border-color: var(--color-success);
-  color: #6acc6a;
+  background: var(--sbx-green-light);
+  border-color: var(--sbx-accent);
+  color: var(--sbx-accent);
 }
 
 .legend {
@@ -51,7 +54,8 @@
   gap: 12px;
   margin-top: 6px;
   font-size: 11px;
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
-.legendCorrect { color: #6acc6a; }
-.legendElim { color: #cc6666; }
+.legendCorrect { color: var(--sbx-accent); }
+.legendElim { color: var(--sbx-red); }

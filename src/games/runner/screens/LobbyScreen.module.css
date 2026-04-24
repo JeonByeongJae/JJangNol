@@ -10,9 +10,9 @@
 
 .card {
   width: 100%;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
+  background: var(--sbx-surface);
+  border-radius: var(--sbx-card-radius);
+  box-shadow: var(--sbx-shadow-card);
   padding: 32px 24px;
   display: flex;
   flex-direction: column;
@@ -21,52 +21,57 @@
 }
 
 .title {
-  color: var(--color-gold);
+  color: var(--sbx-green);
   font-size: 22px;
-  letter-spacing: 3px;
+  font-weight: 700;
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 .codeBox {
-  background: #1a0e08;
-  border: 1px solid var(--color-gold);
-  border-radius: 8px;
+  background: var(--sbx-house);
+  border-radius: var(--sbx-card-radius);
   padding: 16px 24px;
   text-align: center;
   width: 100%;
 }
 
 .codeLabel {
-  color: var(--color-text-muted);
+  color: var(--sbx-text-white-soft);
   font-size: 11px;
-  letter-spacing: 1px;
+  letter-spacing: 0.1em;
   margin-bottom: 6px;
 }
 
 .code {
-  color: var(--color-gold);
+  color: var(--sbx-text-white);
   font-size: 32px;
-  letter-spacing: 8px;
-  font-weight: bold;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  font-family: 'Inter', monospace;
 }
 
 .copyBtn {
   margin-top: 8px;
   background: transparent;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  padding: 4px 12px;
-  color: var(--color-text-muted);
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: var(--sbx-btn-radius);
+  padding: 6px 16px;
+  color: var(--sbx-text-white-soft);
   font-size: 12px;
+  font-family: var(--sbx-font);
+  letter-spacing: var(--sbx-letter-spacing);
+  transition: all 0.2s ease;
 }
 
 .copyBtn:hover {
-  border-color: var(--color-gold);
-  color: var(--color-text);
+  border-color: var(--sbx-text-white);
+  color: var(--sbx-text-white);
 }
 
 .hint {
-  color: var(--color-text-muted);
+  color: var(--sbx-text-soft);
   font-size: 12px;
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 .players {
@@ -81,10 +86,11 @@
   align-items: center;
   gap: 10px;
   padding: 10px 14px;
-  background: #1a0e08;
-  border: 1px solid var(--color-border-dim);
-  border-radius: 6px;
+  background: var(--sbx-ceramic);
+  border-radius: 8px;
   font-size: 14px;
+  color: var(--sbx-text);
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 .roleIcon { font-size: 18px; }
@@ -92,18 +98,22 @@
 .roleLabel {
   margin-left: auto;
   font-size: 11px;
-  color: var(--color-text-muted);
+  color: var(--sbx-text-soft);
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 .waiting {
-  color: var(--color-text-muted);
+  color: var(--sbx-text-soft);
   font-size: 12px;
   animation: pulse 1.5s infinite;
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 .myRole {
   font-size: 13px;
-  color: var(--color-gold);
+  font-weight: 600;
+  color: var(--sbx-accent);
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 @keyframes pulse {

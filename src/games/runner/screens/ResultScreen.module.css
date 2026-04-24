@@ -10,9 +10,9 @@
 
 .card {
   width: 100%;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
+  background: var(--sbx-surface);
+  border-radius: var(--sbx-card-radius);
+  box-shadow: var(--sbx-shadow-card);
   padding: 40px 24px;
   display: flex;
   flex-direction: column;
@@ -26,18 +26,20 @@
 
 .result {
   font-size: 32px;
-  color: var(--color-gold);
-  letter-spacing: 4px;
+  font-weight: 700;
+  color: var(--sbx-green);
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 .winnerText {
-  color: var(--color-text-muted);
+  color: var(--sbx-text-soft);
   font-size: 16px;
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 .winnerName {
-  color: var(--color-text);
-  font-weight: bold;
+  color: var(--sbx-text);
+  font-weight: 700;
 }
 
 .players {
@@ -53,19 +55,21 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background: #1a0e08;
-  border: 1px solid var(--color-border-dim);
-  border-radius: 6px;
+  background: var(--sbx-ceramic);
+  border-radius: 8px;
   font-size: 16px;
+  color: var(--sbx-text);
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 .badge {
-  background: var(--color-gold);
-  color: #1a0e08;
+  background: var(--sbx-house);
+  color: var(--sbx-text-white);
   font-size: 11px;
-  font-weight: bold;
-  padding: 2px 8px;
-  border-radius: 4px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--sbx-btn-radius);
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 .trailSection {
@@ -74,9 +78,10 @@
 }
 
 .trailLabel {
-  color: var(--color-gold);
+  color: var(--sbx-green);
   font-size: 12px;
-  letter-spacing: 1px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   margin-bottom: 10px;
   text-align: center;
 }
@@ -93,7 +98,7 @@
   width: 44px;
   height: 62px;
   background: var(--color-card-face);
-  border: 2px solid var(--color-gold);
+  border: 2px solid var(--sbx-gold);
   border-radius: 5px;
   display: flex;
   align-items: center;
@@ -111,11 +116,11 @@
   bottom: 2px;
   right: 2px;
   background: #3a2510;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--sbx-gold);
   border-radius: 2px;
   padding: 1px 3px;
   font-size: 10px;
-  color: var(--color-gold);
+  color: var(--sbx-gold);
 }
 
 .actions {
@@ -129,28 +134,35 @@
 .rematchBtn {
   width: 100%;
   padding: 14px;
-  background: var(--color-card-face);
-  color: var(--color-gold);
-  border: 1px solid var(--color-gold);
-  border-radius: 5px;
+  background: transparent;
+  color: var(--sbx-accent);
+  border: 1.5px solid var(--sbx-accent);
+  border-radius: var(--sbx-btn-radius);
   font-size: 17px;
-  font-weight: bold;
+  font-weight: 600;
+  font-family: var(--sbx-font);
+  letter-spacing: var(--sbx-letter-spacing);
+  transition: all 0.2s ease;
 }
 
-.rematchBtn:hover {
-  background: #6a4a2e;
+.rematchBtn:active {
+  transform: scale(0.95);
 }
 
 .btn {
   width: 100%;
   padding: 14px;
-  background: var(--color-gold);
-  color: #1a0e08;
-  border-radius: 5px;
+  background: var(--sbx-accent);
+  color: #ffffff;
+  border: 1px solid var(--sbx-accent);
+  border-radius: var(--sbx-btn-radius);
   font-size: 17px;
-  font-weight: bold;
+  font-weight: 600;
+  font-family: var(--sbx-font);
+  letter-spacing: var(--sbx-letter-spacing);
+  transition: all 0.2s ease;
 }
 
-.btn:hover {
-  background: #d4b06a;
+.btn:active {
+  transform: scale(0.95);
 }

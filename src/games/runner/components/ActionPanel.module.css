@@ -1,7 +1,7 @@
 .panel {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
+  background: var(--sbx-surface);
+  border-radius: var(--sbx-card-radius);
+  box-shadow: var(--sbx-shadow-card);
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -16,30 +16,37 @@
 .primary {
   flex: 1;
   padding: 12px;
-  background: var(--color-gold);
-  color: #1a0e08;
-  border-radius: 5px;
+  background: var(--sbx-accent);
+  color: #ffffff;
+  border: 1px solid var(--sbx-accent);
+  border-radius: var(--sbx-btn-radius);
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 600;
+  font-family: var(--sbx-font);
+  letter-spacing: var(--sbx-letter-spacing);
+  transition: all 0.2s ease;
 }
 
-.primary:hover:not(:disabled) {
-  background: #d4b06a;
+.primary:active:not(:disabled) {
+  transform: scale(0.95);
 }
 
 .secondary {
   flex: 1;
   padding: 12px;
   background: transparent;
-  border: 1px solid var(--color-border);
-  color: var(--color-text-muted);
-  border-radius: 5px;
+  border: 1.5px solid var(--sbx-accent);
+  color: var(--sbx-accent);
+  border-radius: var(--sbx-btn-radius);
   font-size: 15px;
+  font-weight: 600;
+  font-family: var(--sbx-font);
+  letter-spacing: var(--sbx-letter-spacing);
+  transition: all 0.2s ease;
 }
 
-.secondary:hover:not(:disabled) {
-  border-color: var(--color-gold);
-  color: var(--color-text);
+.secondary:active:not(:disabled) {
+  transform: scale(0.95);
 }
 
 .boosterInfo {
@@ -47,12 +54,15 @@
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: #7ab87a;
+  color: var(--sbx-accent);
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 .clearBtn {
   background: none;
-  color: var(--color-text-muted);
+  color: var(--sbx-text-soft);
   font-size: 14px;
   padding: 2px 4px;
+  font-family: var(--sbx-font);
+  letter-spacing: var(--sbx-letter-spacing);
 }

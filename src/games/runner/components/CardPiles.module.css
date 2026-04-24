@@ -1,14 +1,15 @@
 .section {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
+  background: var(--sbx-surface);
+  border-radius: var(--sbx-card-radius);
+  box-shadow: var(--sbx-shadow-card);
   padding: 10px;
 }
 
 .label {
-  color: var(--color-gold);
+  color: var(--sbx-green);
   font-size: 12px;
-  letter-spacing: 1px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   margin-bottom: 8px;
 }
 
@@ -20,8 +21,8 @@
 .pile {
   flex: 1;
   background: #3d2a15;
-  border: 1.5px solid var(--color-border-dim);
-  border-radius: 5px;
+  border: 1.5px solid rgba(0,0,0,0.2);
+  border-radius: 8px;
   padding: 8px 6px;
   display: flex;
   flex-direction: column;
@@ -31,7 +32,7 @@
 }
 
 .active {
-  border-color: var(--color-gold);
+  border-color: var(--sbx-accent);
   cursor: pointer;
 }
 
@@ -40,19 +41,22 @@
 }
 
 .pileLabel {
-  color: var(--color-gold);
+  color: var(--sbx-gold-light);
   font-size: 12px;
+  font-weight: 600;
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 .cardBack {
   width: 30px;
   height: 42px;
   background: var(--color-card-face);
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 3px;
 }
 
 .count {
-  color: var(--color-text-muted);
+  color: var(--sbx-text-white-soft);
   font-size: 12px;
+  letter-spacing: var(--sbx-letter-spacing);
 }

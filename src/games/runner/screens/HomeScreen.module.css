@@ -10,9 +10,9 @@
 
 .card {
   width: 100%;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
+  background: var(--sbx-surface);
+  border-radius: var(--sbx-card-radius);
+  box-shadow: var(--sbx-shadow-card);
   padding: 32px 24px;
   display: flex;
   flex-direction: column;
@@ -22,15 +22,16 @@
 .title {
   text-align: center;
   font-size: 36px;
-  color: var(--color-gold);
-  letter-spacing: 6px;
+  font-weight: 700;
+  color: var(--sbx-green);
+  letter-spacing: 0.1em;
 }
 
 .subtitle {
   text-align: center;
   font-size: 13px;
-  color: var(--color-text-muted);
-  letter-spacing: 2px;
+  color: var(--sbx-text-soft);
+  letter-spacing: var(--sbx-letter-spacing);
   margin-top: -8px;
   margin-bottom: 8px;
 }
@@ -38,37 +39,45 @@
 .input,
 .codeInput {
   width: 100%;
-  background: #1a0e08;
-  border: 1px solid var(--color-border);
-  border-radius: 5px;
+  background: var(--sbx-surface);
+  border: 1.5px solid rgba(0,0,0,0.2);
+  border-radius: 8px;
   padding: 10px 12px;
-  color: var(--color-text);
+  color: var(--sbx-text);
   font-size: 14px;
+  font-family: var(--sbx-font);
+  letter-spacing: var(--sbx-letter-spacing);
+  transition: border-color 0.2s ease;
 }
 
 .input:focus,
 .codeInput:focus {
-  border-color: var(--color-gold);
+  border-color: var(--sbx-accent);
 }
 
 .primaryBtn {
   width: 100%;
   padding: 12px;
-  background: var(--color-gold);
-  color: #1a0e08;
-  border-radius: 5px;
+  background: var(--sbx-accent);
+  color: #ffffff;
+  border: 1px solid var(--sbx-accent);
+  border-radius: var(--sbx-btn-radius);
   font-size: 15px;
-  font-weight: bold;
+  font-weight: 600;
+  font-family: var(--sbx-font);
+  letter-spacing: var(--sbx-letter-spacing);
+  transition: all 0.2s ease;
 }
 
-.primaryBtn:hover:not(:disabled) {
-  background: #d4b06a;
+.primaryBtn:active:not(:disabled) {
+  transform: scale(0.95);
 }
 
 .divider {
   text-align: center;
-  color: var(--color-text-muted);
+  color: var(--sbx-text-soft);
   font-size: 12px;
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 .joinRow {
@@ -78,25 +87,30 @@
 
 .codeInput {
   flex: 1;
-  letter-spacing: 3px;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
 }
 
 .joinBtn {
   padding: 10px 18px;
   background: transparent;
-  border: 1px solid var(--color-border);
-  border-radius: 5px;
-  color: var(--color-text);
+  border: 1.5px solid var(--sbx-accent);
+  border-radius: var(--sbx-btn-radius);
+  color: var(--sbx-accent);
   font-size: 14px;
+  font-weight: 600;
+  font-family: var(--sbx-font);
+  letter-spacing: var(--sbx-letter-spacing);
+  transition: all 0.2s ease;
 }
 
-.joinBtn:hover:not(:disabled) {
-  border-color: var(--color-gold);
+.joinBtn:active:not(:disabled) {
+  transform: scale(0.95);
 }
 
 .error {
-  color: var(--color-danger);
+  color: var(--sbx-red);
   font-size: 12px;
   text-align: center;
+  letter-spacing: var(--sbx-letter-spacing);
 }

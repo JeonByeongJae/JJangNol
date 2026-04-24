@@ -1,6 +1,6 @@
 .container {
   min-height: 100vh;
-  background: var(--color-bg);
+  background: var(--sbx-canvas);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,11 +9,12 @@
 }
 
 .title {
-  color: var(--color-gold);
-  font-family: 'Noto Serif KR', serif;
+  color: var(--sbx-green);
+  font-family: var(--sbx-font);
   font-size: 2rem;
+  font-weight: 700;
   margin-bottom: 32px;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 .grid {
@@ -24,20 +25,26 @@
 }
 
 .card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
+  background: var(--sbx-surface);
+  border: none;
+  border-radius: var(--sbx-card-radius);
+  box-shadow: var(--sbx-shadow-card);
   padding: 20px 24px;
   display: flex;
   align-items: center;
   gap: 16px;
   text-decoration: none;
-  color: var(--color-text);
-  transition: border-color 0.15s;
+  color: var(--sbx-text);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .card:hover {
-  border-color: var(--color-gold);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18), 0 1px 3px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
+.card:active {
+  transform: scale(0.98);
 }
 
 .emoji {
@@ -46,12 +53,15 @@
 }
 
 .gameName {
-  font-weight: bold;
+  font-weight: 700;
   font-size: 1.1rem;
+  color: var(--sbx-text);
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 .players {
-  color: var(--color-text-muted);
+  color: var(--sbx-text-soft);
   font-size: 0.875rem;
   margin-top: 2px;
+  letter-spacing: var(--sbx-letter-spacing);
 }

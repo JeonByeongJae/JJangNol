@@ -1,14 +1,15 @@
 .section {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
+  background: var(--sbx-surface);
+  border-radius: var(--sbx-card-radius);
+  box-shadow: var(--sbx-shadow-card);
   padding: 10px;
 }
 
 .label {
-  color: var(--color-gold);
+  color: var(--sbx-green);
   font-size: 12px;
-  letter-spacing: 1px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   margin-bottom: 8px;
 }
 
@@ -33,12 +34,12 @@
 
 .revealed {
   background: var(--color-card-face);
-  border: 2px solid var(--color-gold);
+  border: 2px solid var(--sbx-gold);
 }
 
 .faceDown {
   background: var(--color-card-back);
-  border: 1.5px solid #666;
+  border: 1.5px solid #555;
 }
 
 .guessable {
@@ -46,17 +47,15 @@
 }
 
 .guessable:hover {
-  border-color: #aaa;
+  border-color: rgba(0,0,0,0.4);
   opacity: 0.85;
 }
 
-/* 추리 값이 배정된 카드 (골드) */
 .selected {
-  border: 2px solid var(--color-gold) !important;
-  box-shadow: 0 0 6px var(--color-gold);
+  border: 2px solid var(--sbx-gold) !important;
+  box-shadow: 0 0 6px var(--sbx-gold);
 }
 
-/* 현재 번호 입력 중인 카드 (밝은 하늘색) */
 .active {
   border: 2px solid #4fc3f7 !important;
   box-shadow: 0 0 8px #4fc3f7;
@@ -69,9 +68,9 @@
 }
 
 .secretValue {
-  color: var(--color-gold);
+  color: var(--sbx-gold);
   font-size: 14px;
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 .boosterBadge {
@@ -79,14 +78,13 @@
   bottom: 2px;
   right: 2px;
   background: #3a2510;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--sbx-gold);
   border-radius: 2px;
   padding: 1px 4px;
   font-size: 11px;
-  color: var(--color-gold);
+  color: var(--sbx-gold);
 }
 
-/* 추격자가 이 카드에 배정한 추리 숫자 */
 .guessBadge {
   position: absolute;
   top: 2px;
@@ -100,10 +98,10 @@
   color: #4fc3f7;
 }
 
-/* 카드 선택 안내 문구 */
 .activeHint {
   margin-top: 8px;
   font-size: 13px;
   color: #4fc3f7;
   text-align: center;
+  letter-spacing: var(--sbx-letter-spacing);
 }

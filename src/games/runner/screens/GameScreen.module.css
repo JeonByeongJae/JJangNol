@@ -12,28 +12,30 @@
 .guessResult {
   text-align: center;
   padding: 8px 16px;
-  border-radius: 8px;
+  border-radius: var(--sbx-btn-radius);
   font-size: 0.95rem;
   font-weight: 600;
   animation: fadeIn 0.2s ease;
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 .guessCorrect {
-  background: rgba(80, 180, 80, 0.25);
-  border: 1px solid #50b450;
-  color: #90ee90;
+  background: var(--sbx-green-light);
+  border: 1px solid var(--sbx-accent);
+  color: var(--sbx-accent);
 }
 
 .guessWrong {
-  background: rgba(200, 60, 60, 0.25);
-  border: 1px solid #c83c3c;
-  color: #ff9090;
+  background: rgba(200, 32, 20, 0.08);
+  border: 1px solid var(--sbx-red);
+  color: var(--sbx-red);
 }
 
 .runnerHandCount {
   font-size: 13px;
-  color: var(--color-text-muted);
+  color: var(--sbx-text-soft);
   padding: 4px 2px;
+  letter-spacing: var(--sbx-letter-spacing);
 }
 
 @keyframes fadeIn {
