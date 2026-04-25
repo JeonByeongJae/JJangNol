@@ -77,7 +77,9 @@ export async function stopClimbing(
   combo?: [number, number]
 ): Promise<void> {
   const snap = await get(ref(db, `rooms/cant-stop/${roomId}`))
+  if (!snap.exists()) throw new Error('방을 찾을 수 없습니다.')
   const room = snap.val() as CantStopRoomState
+  if (!room.board) throw new Error('보드 데이터 없음')
   const player = room.turn as PlayerKey
   const board = JSON.parse(JSON.stringify(room.board)) as CantStopRoomState['board']
 

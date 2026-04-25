@@ -11,7 +11,7 @@ interface Props {
   selectedCombo: number | null
   onSelectCombo: (idx: number | null) => void
   onRoll: (comboIdx: number | null) => void
-  onStop: (comboIdx: number | null) => void
+  onStop: (comboIdx: number | null) => Promise<void>
   onBust: () => void
 }
 
@@ -89,9 +89,13 @@ export default function ActionPanel({
     onSelectCombo(null)
   }
 
-  const handleStop = () => {
-    onStop(selectedCombo)
-    onSelectCombo(null)
+  const handleStop = async () => {
+    try {
+      await onStop(selectedCombo)
+      onSelectCombo(null)
+    } catch {
+      // onStop이 에러를 alert으로 처리함, 콤보 선택 유지
+    }
   }
 
   const mustSelectCombo = combos.length > 0 && selectedCombo === null

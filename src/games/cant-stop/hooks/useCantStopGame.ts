@@ -53,7 +53,9 @@ export function useCantStopGame(roomId: string | null, myKey: PlayerKey) {
       await stopClimbing(roomId, combo)
     } catch (e) {
       console.error('[CantStop] stopClimbing 실패:', e)
-      alert('캠프 확정에 실패했습니다. 다시 시도해 주세요.')
+      const msg = e instanceof Error ? e.message : String(e)
+      alert(`캠프 확정에 실패했습니다.\n${msg}`)
+      throw e
     } finally {
       submittingRef.current = false
       setSubmitting(false)
