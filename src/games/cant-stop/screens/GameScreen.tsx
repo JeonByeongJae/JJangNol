@@ -3,6 +3,7 @@ import { useCantStopGame } from '../hooks/useCantStopGame'
 import MountainBoard from '../components/MountainBoard'
 import ActionPanel from '../components/ActionPanel'
 import { getDiceCombos } from '../utils/dice'
+import { COLS } from '../utils/columns'
 import { updatePendingCombo } from '../../../shared/firebase/cantStopDb'
 import type { CantStopRoomState, PlayerKey } from '../types'
 import styles from './GameScreen.module.css'
@@ -24,8 +25,10 @@ function calcPreviewPositions(
     const colState = room.board[key]
     if (!colState || colState.locked != null) continue
     if (climbers[key] !== undefined) {
-      climbers[key] += 1
-      result[key] = climbers[key]
+      if (climbers[key] < COLS[col]) {
+        climbers[key] += 1
+        result[key] = climbers[key]
+      }
     } else if (Object.keys(climbers).length < 3) {
       climbers[key] = (colState[player] ?? 0) + 1
       result[key] = climbers[key]

@@ -20,7 +20,7 @@ function calcClimbers(
     const colState = board[key]
     if (!colState || colState.locked != null) continue
     if (c[key] !== undefined) {
-      c[key] += 1
+      if (c[key] < COLS[col]) c[key] += 1
     } else if (Object.keys(c).length < 3) {
       c[key] = (colState[player] ?? 0) + 1
     }
