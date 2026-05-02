@@ -13,6 +13,7 @@ interface Props {
   onRoll: (comboIdx: number | null) => void
   onStop: (comboIdx: number | null) => Promise<void>
   onBust: () => void
+  pendingCombo?: [number, number] | null
 }
 
 function getComboSplits(dice: number[]): [string, string][] {
@@ -26,7 +27,7 @@ function getComboSplits(dice: number[]): [string, string][] {
 
 export default function ActionPanel({
   room, isMyTurn, submitting, comboPlayable, hasPlayableCombo,
-  selectedCombo, onSelectCombo, onRoll, onStop, onBust,
+  selectedCombo, onSelectCombo, onRoll, onStop, onBust, pendingCombo,
 }: Props) {
   const dice = room.dice ?? []
   const combos = dice.length === 4 ? getDiceCombos(dice) : []
@@ -35,6 +36,10 @@ export default function ActionPanel({
   const isBust = room.rolledThisTurn && combos.length > 0 && !hasPlayableCombo
 
   if (!isMyTurn) {
+    const oppSelectedIdx = pendingCombo
+      ? combos.findIndex(c => c[0] === pendingCombo[0] && c[1] === pendingCombo[1])
+      : -1
+
     return (
       <div className={styles.panel}>
         {dice.length === 4 && (
@@ -46,14 +51,25 @@ export default function ActionPanel({
         )}
         {combos.length > 0 && (
           <div className={styles.combos}>
-            {combos.map((combo, idx) => (
-              <div key={idx} className={`${styles.comboCard} ${styles.comboCardDisabled}`}>
-                <div className={styles.comboSum}>{combo[0]} + {combo[1]}</div>
-                <div className={styles.comboDetail}>
-                  ({splits[idx][0]}) · ({splits[idx][1]})
+            {combos.map((combo, idx) => {
+              const isOppSelected = idx === oppSelectedIdx
+              return (
+                <div
+                  key={idx}
+                  className={[
+                    styles.comboCard,
+                    isOppSelected ? styles.comboCardOppSelected : styles.comboCardDisabled,
+                  ].join(' ')}
+                >
+                  <div className={`${styles.comboSum}${isOppSelected ? ` ${styles.comboSumOppSelected}` : ''}`}>
+                    {combo[0]} + {combo[1]}
+                  </div>
+                  <div className={styles.comboDetail}>
+                    ({splits[idx][0]}) · ({splits[idx][1]})
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
         <p className={styles.waitMsg}>상대방 차례입니다...</p>

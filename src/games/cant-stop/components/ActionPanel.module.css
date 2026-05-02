@@ -63,6 +63,16 @@
   cursor: default;
 }
 
+.comboCardOppSelected {
+  border-color: var(--sbx-red) !important;
+  background: rgba(180, 40, 40, 0.08);
+  cursor: default;
+}
+
+.comboSumOppSelected {
+  color: var(--sbx-red);
+}
+
 .comboSum {
   font-size: 18px;
   font-weight: 700;

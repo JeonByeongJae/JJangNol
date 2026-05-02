@@ -87,6 +87,7 @@ export default function GameScreen({ roomId, myKey }: Props) {
           onRoll={handleRoll}
           onStop={handleStop}
           onBust={handleBust}
+          pendingCombo={room.pendingCombo}
         />
       </div>
     </div>
