@@ -5,6 +5,7 @@ import {
   rollDiceAction,
   stopClimbing,
   bust,
+  updatePendingCombo,
 } from '../../../shared/firebase/cantStopDb'
 import type { CantStopRoomState, PlayerKey } from '../types'
 import { getDiceCombos, isComboPlayable } from '../utils/dice'
@@ -62,6 +63,12 @@ export function useCantStopGame(roomId: string | null, myKey: PlayerKey) {
     }
   }, [roomId, isMyTurn, room, combos])
 
+  const syncPendingCombo = useCallback((comboIdx: number | null) => {
+    if (!roomId || !isMyTurn) return
+    const combo = comboIdx !== null ? combos[comboIdx] : null
+    updatePendingCombo(roomId, combo).catch(() => {})
+  }, [roomId, isMyTurn, combos])
+
   const handleBust = useCallback(async () => {
     if (!roomId || submittingRef.current) return
     submittingRef.current = true
@@ -88,5 +95,6 @@ export function useCantStopGame(roomId: string | null, myKey: PlayerKey) {
     handleRoll,
     handleStop,
     handleBust,
+    syncPendingCombo,
   }
 }

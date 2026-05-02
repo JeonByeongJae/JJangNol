@@ -39,14 +39,21 @@ export default function GameScreen({ roomId, myKey }: Props) {
     room, loading, isMyTurn, submitting,
     combos, comboPlayable, hasPlayableCombo,
     handleRoll, handleStop, handleBust,
+    syncPendingCombo,
   } = useCantStopGame(roomId, myKey)
 
   if (loading || !room) {
     return <div style={{ color: '#a08060', padding: 24, textAlign: 'center' }}>연결 중...</div>
   }
 
+  const oppKey: PlayerKey = myKey === 'host' ? 'guest' : 'host'
+
   const previewPositions = (isMyTurn && selectedCombo !== null && combos[selectedCombo])
     ? calcPreviewPositions(room, myKey, combos[selectedCombo])
+    : {}
+
+  const oppPreviewPositions = (!isMyTurn && room.pendingCombo)
+    ? calcPreviewPositions(room, oppKey, room.pendingCombo)
     : {}
 
   const climberCount = Object.keys(room.climbers ?? {}).length
@@ -54,11 +61,21 @@ export default function GameScreen({ roomId, myKey }: Props) {
     ? `⛰️ 내 차례 — 등반 중 (등반자 ${climberCount}/3)`
     : `상대방 차례`
 
+  const handleSelectCombo = (idx: number | null) => {
+    setSelectedCombo(idx)
+    syncPendingCombo(idx)
+  }
+
   return (
     <div className={styles.screen}>
       <div className={styles.banner}>{bannerText}</div>
       <div className={styles.content}>
-        <MountainBoard room={room} myKey={myKey} previewPositions={previewPositions} />
+        <MountainBoard
+          room={room}
+          myKey={myKey}
+          previewPositions={previewPositions}
+          oppPreviewPositions={oppPreviewPositions}
+        />
         <ActionPanel
           room={room}
           isMyTurn={isMyTurn}
@@ -66,7 +83,7 @@ export default function GameScreen({ roomId, myKey }: Props) {
           comboPlayable={comboPlayable}
           hasPlayableCombo={hasPlayableCombo}
           selectedCombo={selectedCombo}
-          onSelectCombo={setSelectedCombo}
+          onSelectCombo={handleSelectCombo}
           onRoll={handleRoll}
           onStop={handleStop}
           onBust={handleBust}

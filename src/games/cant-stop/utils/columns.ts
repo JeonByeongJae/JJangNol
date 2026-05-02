@@ -21,5 +21,5 @@ export function isVictory(
   board: Record<string, ColumnState>,
   player: PlayerKey
 ): boolean {
-  return Object.values(board).filter(c => c.locked === player).length >= 3
+  return Object.values(board).filter(c => c != null && c.locked === player).length >= 3
 }

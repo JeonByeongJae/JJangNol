@@ -28,9 +28,10 @@ interface Props {
   room: CantStopRoomState
   myKey: PlayerKey
   previewPositions?: Record<string, number>
+  oppPreviewPositions?: Record<string, number>
 }
 
-export default function MountainBoard({ room, myKey, previewPositions = {} }: Props) {
+export default function MountainBoard({ room, myKey, previewPositions = {}, oppPreviewPositions = {} }: Props) {
   const oppKey: PlayerKey = myKey === 'host' ? 'guest' : 'host'
 
   return (
@@ -49,19 +50,22 @@ export default function MountainBoard({ room, myKey, previewPositions = {} }: Pr
               const isTop = pos === size
               const climberPos = room.climbers?.[key]
               const previewPos = previewPositions[key]
+              const oppPreviewPos = oppPreviewPositions[key]
               const myBasePos = colState?.[myKey] ?? 0
               const oppBasePos = colState?.[oppKey] ?? 0
               const locked = colState?.locked
 
               const isClimber = climberPos === pos
               const isPreview = !isClimber && previewPos === pos
-              const isMyBase = !isClimber && !isPreview && myBasePos === pos
-              const isOppBase = !isClimber && !isPreview && !isMyBase && oppBasePos === pos
+              const isOppPreview = !isClimber && !isPreview && oppPreviewPos === pos
+              const isMyBase = !isClimber && !isPreview && !isOppPreview && myBasePos === pos
+              const isOppBase = !isClimber && !isPreview && !isOppPreview && !isMyBase && oppBasePos === pos
 
               let cellClass = styles.cell
               if (isTop) cellClass += ` ${styles.cellTop}`
               if (isClimber) cellClass += ` ${styles.cellClimber}`
               else if (isPreview) cellClass += ` ${styles.cellPreview}`
+              else if (isOppPreview) cellClass += ` ${styles.cellOppPreview}`
               else if (isMyBase) cellClass += ` ${styles.cellMyBase}`
               else if (isOppBase) cellClass += ` ${styles.cellOppBase}`
               if (locked) cellClass += ` ${styles.cellLocked}`

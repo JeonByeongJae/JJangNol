@@ -22,6 +22,7 @@ export interface CantStopRoomState {
   dice: number[]                       // 굴린 주사위 4개
   rolledThisTurn: boolean
   winner: PlayerKey | null
+  pendingCombo?: [number, number] | null  // 현재 턴 플레이어가 선택 중인 콤보
 }
 
 export interface Session {

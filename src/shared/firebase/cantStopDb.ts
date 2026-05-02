@@ -57,19 +57,26 @@ export async function joinRoom(roomId: string, guestName: string): Promise<void>
   })
 }
 
+export async function updatePendingCombo(
+  roomId: string,
+  combo: [number, number] | null
+): Promise<void> {
+  await update(ref(db, `rooms/cant-stop/${roomId}`), { pendingCombo: combo })
+}
+
 export async function rollDiceAction(
   roomId: string,
   combo?: [number, number]
 ): Promise<void> {
   const dice = rollDice()
   if (!combo) {
-    await update(ref(db, `rooms/cant-stop/${roomId}`), { dice, rolledThisTurn: true })
+    await update(ref(db, `rooms/cant-stop/${roomId}`), { dice, rolledThisTurn: true, pendingCombo: null })
     return
   }
   const snap = await get(ref(db, `rooms/cant-stop/${roomId}`))
   const room = snap.val() as CantStopRoomState
   const climbers = calcClimbers(room.climbers ?? {}, room.board, room.turn as PlayerKey, combo)
-  await update(ref(db, `rooms/cant-stop/${roomId}`), { climbers, dice, rolledThisTurn: true })
+  await update(ref(db, `rooms/cant-stop/${roomId}`), { climbers, dice, rolledThisTurn: true, pendingCombo: null })
 }
 
 export async function stopClimbing(
@@ -89,6 +96,7 @@ export async function stopClimbing(
 
   for (const [key, pos] of Object.entries(climbers)) {
     const col = Number(key)
+    if (!board[key]) continue
     board[key][player] = pos
     if (pos >= COLS[col]) {
       board[key].locked = player
@@ -103,6 +111,7 @@ export async function stopClimbing(
     climbers: {},
     dice: [],
     rolledThisTurn: false,
+    pendingCombo: null,
     turn: victory ? null : nextTurn,
     status: victory ? 'finished' : 'playing',
     winner: victory ? player : null,
@@ -118,6 +127,7 @@ export async function bust(roomId: string): Promise<void> {
     climbers: {},
     dice: [],
     rolledThisTurn: false,
+    pendingCombo: null,
     turn: nextTurn,
   })
 }

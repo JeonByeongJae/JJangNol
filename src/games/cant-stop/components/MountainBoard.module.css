@@ -58,6 +58,12 @@
   box-shadow: none;
 }
 
+.cellOppPreview {
+  background: rgba(180, 40, 40, 0.15);
+  border: 2px dashed var(--sbx-red);
+  box-shadow: none;
+}
+
 .cellMyBase {
   background: var(--sbx-accent);
   border-color: var(--sbx-green);
