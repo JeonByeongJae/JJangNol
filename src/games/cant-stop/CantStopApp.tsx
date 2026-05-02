@@ -4,7 +4,7 @@ import HomeScreen from './screens/HomeScreen'
 import LobbyScreen from './screens/LobbyScreen'
 import GameScreen from './screens/GameScreen'
 import ResultScreen from './screens/ResultScreen'
-import { subscribeRoom } from '../../shared/firebase/cantStopDb'
+import { subscribeRoom, resetRoom } from '../../shared/firebase/cantStopDb'
 import { useRoom } from '../../shared/hooks/useRoom'
 
 function CantStopRoom() {
@@ -14,14 +14,15 @@ function CantStopRoom() {
 
   const { room, loading } = useRoom<CantStopRoomState>(roomId ?? null, subscribeRoom)
 
-  const handlePlayAgain = () => navigate('/games/cant-stop')
+  const handleHome = () => navigate('/games/cant-stop')
+  const handlePlayAgain = () => resetRoom(roomId!).catch(() => navigate('/games/cant-stop'))
 
   if (loading || !room) {
     return <div style={{ color: '#a08060', padding: 24, textAlign: 'center' }}>연결 중...</div>
   }
 
   if (room.status === 'finished' && room.winner) {
-    return <ResultScreen room={room} myKey={myKey} onPlayAgain={handlePlayAgain} />
+    return <ResultScreen room={room} myKey={myKey} onPlayAgain={handlePlayAgain} onHome={handleHome} />
   }
 
   if (room.status === 'playing') {

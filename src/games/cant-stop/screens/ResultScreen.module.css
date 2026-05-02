@@ -58,3 +58,21 @@
 .playAgainBtn:active {
   transform: scale(0.95);
 }
+
+.homeBtn {
+  background: transparent;
+  border: 1px solid var(--sbx-text-soft);
+  border-radius: var(--sbx-btn-radius);
+  color: var(--sbx-text-soft);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--sbx-font);
+  letter-spacing: var(--sbx-letter-spacing);
+  padding: 10px 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.homeBtn:active {
+  transform: scale(0.95);
+}

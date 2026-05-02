@@ -136,6 +136,23 @@ export async function bust(roomId: string): Promise<void> {
   })
 }
 
+export async function resetRoom(roomId: string): Promise<void> {
+  const snap = await get(ref(db, `rooms/cant-stop/${roomId}`))
+  if (!snap.exists()) throw new Error('방을 찾을 수 없습니다.')
+  const room = snap.val() as CantStopRoomState
+  await set(ref(db, `rooms/cant-stop/${roomId}`), {
+    status: 'playing',
+    players: room.players,
+    turn: 'host',
+    board: initBoard(),
+    climbers: {},
+    dice: [],
+    rolledThisTurn: false,
+    winner: null,
+    pendingComboIdx: null,
+  })
+}
+
 export function subscribeRoom(
   roomId: string,
   callback: (room: CantStopRoomState | null) => void
