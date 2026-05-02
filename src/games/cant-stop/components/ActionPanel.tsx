@@ -13,7 +13,7 @@ interface Props {
   onRoll: (comboIdx: number | null) => void
   onStop: (comboIdx: number | null) => Promise<void>
   onBust: () => void
-  pendingCombo?: [number, number] | null
+  pendingComboIdx?: number | null
 }
 
 function getComboSplits(dice: number[]): [string, string][] {
@@ -27,7 +27,7 @@ function getComboSplits(dice: number[]): [string, string][] {
 
 export default function ActionPanel({
   room, isMyTurn, submitting, comboPlayable, hasPlayableCombo,
-  selectedCombo, onSelectCombo, onRoll, onStop, onBust, pendingCombo,
+  selectedCombo, onSelectCombo, onRoll, onStop, onBust, pendingComboIdx,
 }: Props) {
   const dice = room.dice ?? []
   const combos = dice.length === 4 ? getDiceCombos(dice) : []
@@ -36,9 +36,7 @@ export default function ActionPanel({
   const isBust = room.rolledThisTurn && combos.length > 0 && !hasPlayableCombo
 
   if (!isMyTurn) {
-    const oppSelectedIdx = pendingCombo
-      ? combos.findIndex(c => c[0] === pendingCombo[0] && c[1] === pendingCombo[1])
-      : -1
+    const oppSelectedIdx = pendingComboIdx ?? -1
 
     return (
       <div className={styles.panel}>

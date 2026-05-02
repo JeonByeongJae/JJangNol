@@ -65,9 +65,8 @@ export function useCantStopGame(roomId: string | null, myKey: PlayerKey) {
 
   const syncPendingCombo = useCallback((comboIdx: number | null) => {
     if (!roomId || !isMyTurn) return
-    const combo = comboIdx !== null ? combos[comboIdx] : null
-    updatePendingCombo(roomId, combo).catch(() => {})
-  }, [roomId, isMyTurn, combos])
+    updatePendingCombo(roomId, comboIdx).catch(() => {})
+  }, [roomId, isMyTurn])
 
   const handleBust = useCallback(async () => {
     if (!roomId || submittingRef.current) return

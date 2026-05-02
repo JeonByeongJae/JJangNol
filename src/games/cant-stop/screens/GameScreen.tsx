@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useCantStopGame } from '../hooks/useCantStopGame'
 import MountainBoard from '../components/MountainBoard'
 import ActionPanel from '../components/ActionPanel'
+import { getDiceCombos } from '../utils/dice'
 import type { CantStopRoomState, PlayerKey } from '../types'
 import styles from './GameScreen.module.css'
 
@@ -52,8 +53,10 @@ export default function GameScreen({ roomId, myKey }: Props) {
     ? calcPreviewPositions(room, myKey, combos[selectedCombo])
     : {}
 
-  const oppPreviewPositions = (!isMyTurn && room.pendingCombo)
-    ? calcPreviewPositions(room, oppKey, room.pendingCombo)
+  const oppPendingIdx = room.pendingComboIdx ?? null
+  const oppCombos = room.dice?.length === 4 ? getDiceCombos(room.dice) : []
+  const oppPreviewPositions = (!isMyTurn && oppPendingIdx !== null && oppCombos[oppPendingIdx])
+    ? calcPreviewPositions(room, oppKey, oppCombos[oppPendingIdx])
     : {}
 
   const climberCount = Object.keys(room.climbers ?? {}).length
@@ -87,7 +90,7 @@ export default function GameScreen({ roomId, myKey }: Props) {
           onRoll={handleRoll}
           onStop={handleStop}
           onBust={handleBust}
-          pendingCombo={room.pendingCombo}
+          pendingComboIdx={oppPendingIdx}
         />
       </div>
     </div>
