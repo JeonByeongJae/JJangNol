@@ -65,12 +65,15 @@
 
 .comboCardOppSelected {
   border-color: var(--sbx-red) !important;
-  background: rgba(180, 40, 40, 0.08);
+  border-width: 2px !important;
+  background: rgba(180, 40, 40, 0.12);
   cursor: default;
+  opacity: 1;
 }
 
 .comboSumOppSelected {
   color: var(--sbx-red);
+  font-weight: 700;
 }
 
 .comboSum {
