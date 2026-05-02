@@ -14,6 +14,9 @@ interface Props {
   onStop: (comboIdx: number | null) => Promise<void>
   onBust: () => void
   pendingComboIdx?: number | null
+  partialCols?: [number, number] | null
+  singleColChoice?: number | null
+  onSelectSingleCol?: (col: number | null) => void
 }
 
 function getComboSplits(dice: number[]): [string, string][] {
@@ -28,6 +31,7 @@ function getComboSplits(dice: number[]): [string, string][] {
 export default function ActionPanel({
   room, isMyTurn, submitting, comboPlayable, hasPlayableCombo,
   selectedCombo, onSelectCombo, onRoll, onStop, onBust, pendingComboIdx,
+  partialCols, singleColChoice, onSelectSingleCol,
 }: Props) {
   const dice = room.dice ?? []
   const combos = dice.length === 4 ? getDiceCombos(dice) : []
@@ -113,6 +117,7 @@ export default function ActionPanel({
   }
 
   const mustSelectCombo = combos.length > 0 && selectedCombo === null
+  const mustSelectCol = partialCols != null && singleColChoice == null
 
   return (
     <div className={styles.panel}>
@@ -151,18 +156,33 @@ export default function ActionPanel({
         </div>
       )}
 
+      {partialCols && (
+        <div className={styles.partialRow}>
+          <span className={styles.partialLabel}>어느 열?</span>
+          {partialCols.map(col => (
+            <button
+              key={col}
+              className={`${styles.partialColBtn}${singleColChoice === col ? ` ${styles.partialColBtnSelected}` : ''}`}
+              onClick={() => onSelectSingleCol?.(singleColChoice === col ? null : col)}
+            >
+              {col}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className={styles.btnRow}>
         <button
           className={`${styles.btn} ${styles.btnStop}`}
           onClick={handleStop}
-          disabled={submitting || mustSelectCombo || (climberCount === 0 && selectedCombo === null)}
+          disabled={submitting || mustSelectCombo || mustSelectCol || (climberCount === 0 && selectedCombo === null)}
         >
           {submitting ? '처리 중...' : '✓ 캠프 확정'}
         </button>
         <button
           className={`${styles.btn} ${styles.btnRoll}`}
           onClick={handleRoll}
-          disabled={submitting || mustSelectCombo}
+          disabled={submitting || mustSelectCombo || mustSelectCol}
         >
           🎲 {room.rolledThisTurn ? '계속 굴리기' : '주사위 굴리기'}
         </button>

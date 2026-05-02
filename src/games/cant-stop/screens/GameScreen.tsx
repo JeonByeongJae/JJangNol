@@ -20,8 +20,11 @@ function calcPreviewPositions(
 ): Record<string, number> {
   const climbers = { ...(room.climbers ?? {}) }
   const result: Record<string, number> = {}
+  const seen = new Set<string>()
   for (const col of combo) {
     const key = String(col)
+    if (seen.has(key)) continue
+    seen.add(key)
     const colState = room.board[key]
     if (!colState || colState.locked != null) continue
     if (climbers[key] !== undefined) {
@@ -37,8 +40,27 @@ function calcPreviewPositions(
   return result
 }
 
+// 두 열이 모두 새 열인데 슬롯이 1개만 남은 경우 - 플레이어가 선택해야 함
+function getPartialCols(
+  comboIdx: number | null,
+  combos: [number, number][],
+  room: CantStopRoomState
+): [number, number] | null {
+  if (comboIdx === null) return null
+  const combo = combos[comboIdx]
+  if (!combo || combo[0] === combo[1]) return null
+  const [a, b] = combo
+  const climbersMap = room.climbers ?? {}
+  if (Object.keys(climbersMap).length !== 2) return null
+  if (String(a) in climbersMap || String(b) in climbersMap) return null
+  const aValid = COLS[a] != null && !room.board[String(a)]?.locked
+  const bValid = COLS[b] != null && !room.board[String(b)]?.locked
+  return (aValid && bValid) ? [a, b] : null
+}
+
 export default function GameScreen({ roomId, myKey }: Props) {
   const [selectedCombo, setSelectedCombo] = useState<number | null>(null)
+  const [singleColChoice, setSingleColChoice] = useState<number | null>(null)
 
   const {
     room, loading, isMyTurn, submitting,
@@ -52,8 +74,15 @@ export default function GameScreen({ roomId, myKey }: Props) {
 
   const oppKey: PlayerKey = myKey === 'host' ? 'guest' : 'host'
 
-  const previewPositions = (isMyTurn && selectedCombo !== null && combos[selectedCombo])
-    ? calcPreviewPositions(room, myKey, combos[selectedCombo])
+  const partialCols = isMyTurn ? getPartialCols(selectedCombo, combos, room) : null
+
+  // 부분 선택 시 선택한 열만 적용하는 콤보로 변환
+  const effectiveCombo = (selectedCombo !== null && singleColChoice !== null)
+    ? [singleColChoice, singleColChoice] as [number, number]
+    : (selectedCombo !== null ? combos[selectedCombo] : null)
+
+  const previewPositions = (isMyTurn && effectiveCombo)
+    ? calcPreviewPositions(room, myKey, effectiveCombo)
     : {}
 
   const oppPendingIdx = room.pendingComboIdx ?? null
@@ -69,9 +98,20 @@ export default function GameScreen({ roomId, myKey }: Props) {
 
   const handleSelectCombo = (idx: number | null) => {
     setSelectedCombo(idx)
+    setSingleColChoice(null)
     if (isMyTurn) {
       updatePendingCombo(roomId, idx).catch(e => console.error('pendingComboIdx 동기화 실패:', e))
     }
+  }
+
+  const handleRollWithOverride = (comboIdx: number | null) => {
+    handleRoll(comboIdx, effectiveCombo ?? undefined)
+    setSingleColChoice(null)
+  }
+
+  const handleStopWithOverride = async (comboIdx: number | null) => {
+    await handleStop(comboIdx, effectiveCombo ?? undefined)
+    setSingleColChoice(null)
   }
 
   return (
@@ -92,10 +132,13 @@ export default function GameScreen({ roomId, myKey }: Props) {
           hasPlayableCombo={hasPlayableCombo}
           selectedCombo={selectedCombo}
           onSelectCombo={handleSelectCombo}
-          onRoll={handleRoll}
-          onStop={handleStop}
+          onRoll={handleRollWithOverride}
+          onStop={handleStopWithOverride}
           onBust={handleBust}
           pendingComboIdx={oppPendingIdx}
+          partialCols={partialCols}
+          singleColChoice={singleColChoice}
+          onSelectSingleCol={setSingleColChoice}
         />
       </div>
     </div>

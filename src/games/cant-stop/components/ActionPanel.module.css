@@ -94,6 +94,39 @@
   letter-spacing: var(--sbx-letter-spacing);
 }
 
+.partialRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.partialLabel {
+  font-size: 13px;
+  color: var(--sbx-text-soft);
+  letter-spacing: var(--sbx-letter-spacing);
+}
+
+.partialColBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--sbx-btn-radius);
+  border: 1.5px solid rgba(0, 0, 0, 0.18);
+  background: var(--sbx-surface);
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--sbx-font);
+  color: var(--sbx-text);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.partialColBtnSelected {
+  border-color: var(--sbx-accent) !important;
+  background: var(--sbx-green-light);
+  color: var(--sbx-accent);
+}
+
 .btnRow {
   display: flex;
   gap: 10px;

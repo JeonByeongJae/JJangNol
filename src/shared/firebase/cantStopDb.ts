@@ -15,8 +15,11 @@ function calcClimbers(
   combo: [number, number]
 ): Record<string, number> {
   const c = { ...base }
+  const seen = new Set<string>()
   for (const col of combo) {
     const key = String(col)
+    if (seen.has(key)) continue
+    seen.add(key)
     const colState = board[key]
     if (!colState || colState.locked != null) continue
     if (c[key] !== undefined) {
