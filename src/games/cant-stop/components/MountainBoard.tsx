@@ -60,8 +60,8 @@ export default function MountainBoard({ room, myKey, previewPositions = {}, oppP
               const isOppPreview = !isClimber && !isPreview && oppPreviewPos === pos
               const bothAtPos = myBasePos === pos && oppBasePos === pos
               const isBothBase = !isClimber && !isPreview && !isOppPreview && bothAtPos && !locked
-              const isMyBase = !isClimber && !isPreview && !isOppPreview && !isBothBase && myBasePos === pos && locked !== oppKey
-              const isOppBase = !isClimber && !isPreview && !isOppPreview && !isBothBase && !isMyBase && oppBasePos === pos && locked !== myKey
+              const isMyBase = !isClimber && !isPreview && !isOppPreview && !isBothBase && !locked && myBasePos === pos
+              const isOppBase = !isClimber && !isPreview && !isOppPreview && !isBothBase && !locked && !isMyBase && oppBasePos === pos
 
               let cellClass = styles.cell
               if (isTop) cellClass += ` ${styles.cellTop}`
