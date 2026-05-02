@@ -76,6 +76,12 @@
   box-shadow: none;
 }
 
+.cellBothBase {
+  background: linear-gradient(to right, var(--sbx-accent) 50%, var(--sbx-red) 50%);
+  border-color: var(--sbx-green);
+  box-shadow: none;
+}
+
 .cellLocked {
   opacity: 0.35;
 }

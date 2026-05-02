@@ -175,7 +175,7 @@ export default function ActionPanel({
         <button
           className={`${styles.btn} ${styles.btnStop}`}
           onClick={handleStop}
-          disabled={submitting || mustSelectCombo || mustSelectCol || (climberCount === 0 && selectedCombo === null)}
+          disabled={submitting || mustSelectCombo || mustSelectCol || climberCount < 3}
         >
           {submitting ? '처리 중...' : '✓ 캠프 확정'}
         </button>

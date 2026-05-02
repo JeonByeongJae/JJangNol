@@ -58,14 +58,17 @@ export default function MountainBoard({ room, myKey, previewPositions = {}, oppP
               const isClimber = climberPos === pos
               const isPreview = !isClimber && previewPos === pos
               const isOppPreview = !isClimber && !isPreview && oppPreviewPos === pos
-              const isMyBase = !isClimber && !isPreview && !isOppPreview && myBasePos === pos
-              const isOppBase = !isClimber && !isPreview && !isOppPreview && !isMyBase && oppBasePos === pos
+              const bothAtPos = myBasePos === pos && oppBasePos === pos
+              const isBothBase = !isClimber && !isPreview && !isOppPreview && bothAtPos
+              const isMyBase = !isClimber && !isPreview && !isOppPreview && !isBothBase && myBasePos === pos
+              const isOppBase = !isClimber && !isPreview && !isOppPreview && !isBothBase && !isMyBase && oppBasePos === pos
 
               let cellClass = styles.cell
               if (isTop) cellClass += ` ${styles.cellTop}`
               if (isClimber) cellClass += ` ${styles.cellClimber}`
               else if (isPreview) cellClass += ` ${styles.cellPreview}`
               else if (isOppPreview) cellClass += ` ${styles.cellOppPreview}`
+              else if (isBothBase) cellClass += ` ${styles.cellBothBase}`
               else if (isMyBase) cellClass += ` ${styles.cellMyBase}`
               else if (isOppBase) cellClass += ` ${styles.cellOppBase}`
               if (locked) cellClass += ` ${styles.cellLocked}`
