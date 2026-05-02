@@ -66,7 +66,9 @@ export default function GameScreen({ roomId, myKey }: Props) {
 
   const handleSelectCombo = (idx: number | null) => {
     setSelectedCombo(idx)
-    updatePendingCombo(roomId, idx).catch(e => console.error('pendingComboIdx 동기화 실패:', e))
+    if (isMyTurn) {
+      updatePendingCombo(roomId, idx).catch(e => console.error('pendingComboIdx 동기화 실패:', e))
+    }
   }
 
   return (
