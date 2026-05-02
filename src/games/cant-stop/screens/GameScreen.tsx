@@ -3,6 +3,7 @@ import { useCantStopGame } from '../hooks/useCantStopGame'
 import MountainBoard from '../components/MountainBoard'
 import ActionPanel from '../components/ActionPanel'
 import { getDiceCombos } from '../utils/dice'
+import { updatePendingCombo } from '../../../shared/firebase/cantStopDb'
 import type { CantStopRoomState, PlayerKey } from '../types'
 import styles from './GameScreen.module.css'
 
@@ -40,7 +41,6 @@ export default function GameScreen({ roomId, myKey }: Props) {
     room, loading, isMyTurn, submitting,
     combos, comboPlayable, hasPlayableCombo,
     handleRoll, handleStop, handleBust,
-    syncPendingCombo,
   } = useCantStopGame(roomId, myKey)
 
   if (loading || !room) {
@@ -66,7 +66,7 @@ export default function GameScreen({ roomId, myKey }: Props) {
 
   const handleSelectCombo = (idx: number | null) => {
     setSelectedCombo(idx)
-    syncPendingCombo(idx)
+    updatePendingCombo(roomId, idx).catch(e => console.error('pendingComboIdx 동기화 실패:', e))
   }
 
   return (
