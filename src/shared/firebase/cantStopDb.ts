@@ -12,14 +12,13 @@ function calcClimbers(
   base: Record<string, number>,
   board: Record<string, ColumnState>,
   player: PlayerKey,
-  combo: [number, number]
+  combo: [number, number],
+  forcedCol?: number
 ): Record<string, number> {
   const c = { ...base }
-  const seen = new Set<string>()
   for (const col of combo) {
+    if (forcedCol !== undefined && col !== forcedCol) continue
     const key = String(col)
-    if (seen.has(key)) continue
-    seen.add(key)
     const colState = board[key]
     if (!colState || colState.locked != null) continue
     if (c[key] !== undefined) {
@@ -69,7 +68,8 @@ export async function updatePendingCombo(
 
 export async function rollDiceAction(
   roomId: string,
-  combo?: [number, number]
+  combo?: [number, number],
+  forcedCol?: number
 ): Promise<void> {
   const dice = rollDice()
   if (!combo) {
@@ -78,13 +78,14 @@ export async function rollDiceAction(
   }
   const snap = await get(ref(db, `rooms/cant-stop/${roomId}`))
   const room = snap.val() as CantStopRoomState
-  const climbers = calcClimbers(room.climbers ?? {}, room.board, room.turn as PlayerKey, combo)
+  const climbers = calcClimbers(room.climbers ?? {}, room.board, room.turn as PlayerKey, combo, forcedCol)
   await update(ref(db, `rooms/cant-stop/${roomId}`), { climbers, dice, rolledThisTurn: true, pendingComboIdx: null })
 }
 
 export async function stopClimbing(
   roomId: string,
-  combo?: [number, number]
+  combo?: [number, number],
+  forcedCol?: number
 ): Promise<void> {
   const snap = await get(ref(db, `rooms/cant-stop/${roomId}`))
   if (!snap.exists()) throw new Error('방을 찾을 수 없습니다.')
@@ -94,7 +95,7 @@ export async function stopClimbing(
   const board = JSON.parse(JSON.stringify(room.board)) as CantStopRoomState['board']
 
   const climbers = combo
-    ? calcClimbers(room.climbers ?? {}, room.board, player, combo)
+    ? calcClimbers(room.climbers ?? {}, room.board, player, combo, forcedCol)
     : { ...(room.climbers ?? {}) }
 
   for (const [key, pos] of Object.entries(climbers)) {

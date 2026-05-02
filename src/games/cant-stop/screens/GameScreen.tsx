@@ -16,15 +16,14 @@ interface Props {
 function calcPreviewPositions(
   room: CantStopRoomState,
   player: PlayerKey,
-  combo: [number, number]
+  combo: [number, number],
+  forcedCol?: number
 ): Record<string, number> {
   const climbers = { ...(room.climbers ?? {}) }
   const result: Record<string, number> = {}
-  const seen = new Set<string>()
   for (const col of combo) {
+    if (forcedCol !== undefined && col !== forcedCol) continue
     const key = String(col)
-    if (seen.has(key)) continue
-    seen.add(key)
     const colState = room.board[key]
     if (!colState || colState.locked != null) continue
     if (climbers[key] !== undefined) {
@@ -76,13 +75,8 @@ export default function GameScreen({ roomId, myKey }: Props) {
 
   const partialCols = isMyTurn ? getPartialCols(selectedCombo, combos, room) : null
 
-  // 부분 선택 시 선택한 열만 적용하는 콤보로 변환
-  const effectiveCombo = (selectedCombo !== null && singleColChoice !== null)
-    ? [singleColChoice, singleColChoice] as [number, number]
-    : (selectedCombo !== null ? combos[selectedCombo] : null)
-
-  const previewPositions = (isMyTurn && effectiveCombo)
-    ? calcPreviewPositions(room, myKey, effectiveCombo)
+  const previewPositions = (isMyTurn && selectedCombo !== null && combos[selectedCombo])
+    ? calcPreviewPositions(room, myKey, combos[selectedCombo], singleColChoice ?? undefined)
     : {}
 
   const oppPendingIdx = room.pendingComboIdx ?? null
@@ -105,12 +99,12 @@ export default function GameScreen({ roomId, myKey }: Props) {
   }
 
   const handleRollWithOverride = (comboIdx: number | null) => {
-    handleRoll(comboIdx, effectiveCombo ?? undefined)
+    handleRoll(comboIdx, singleColChoice ?? undefined)
     setSingleColChoice(null)
   }
 
   const handleStopWithOverride = async (comboIdx: number | null) => {
-    await handleStop(comboIdx, effectiveCombo ?? undefined)
+    await handleStop(comboIdx, singleColChoice ?? undefined)
     setSingleColChoice(null)
   }
 

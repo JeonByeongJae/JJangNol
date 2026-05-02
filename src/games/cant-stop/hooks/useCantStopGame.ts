@@ -28,13 +28,13 @@ export function useCantStopGame(roomId: string | null, myKey: PlayerKey) {
 
   const hasPlayableCombo = comboPlayable.some(Boolean)
 
-  const handleRoll = useCallback(async (comboIdx: number | null, overrideCombo?: [number, number]) => {
+  const handleRoll = useCallback(async (comboIdx: number | null, forcedCol?: number) => {
     if (!roomId || !isMyTurn || !room || submittingRef.current) return
     submittingRef.current = true
     setSubmitting(true)
     try {
-      const combo = overrideCombo ?? (comboIdx !== null ? combos[comboIdx] : undefined)
-      await rollDiceAction(roomId, combo)
+      const combo = comboIdx !== null ? combos[comboIdx] : undefined
+      await rollDiceAction(roomId, combo, forcedCol)
     } catch (e) {
       console.error('[CantStop] rollDiceAction 실패:', e)
       alert('주사위 굴리기에 실패했습니다. 다시 시도해 주세요.')
@@ -44,13 +44,13 @@ export function useCantStopGame(roomId: string | null, myKey: PlayerKey) {
     }
   }, [roomId, isMyTurn, room, combos])
 
-  const handleStop = useCallback(async (comboIdx: number | null, overrideCombo?: [number, number]) => {
+  const handleStop = useCallback(async (comboIdx: number | null, forcedCol?: number) => {
     if (!roomId || !isMyTurn || !room || submittingRef.current) return
     submittingRef.current = true
     setSubmitting(true)
     try {
-      const combo = overrideCombo ?? (comboIdx !== null ? combos[comboIdx] : undefined)
-      await stopClimbing(roomId, combo)
+      const combo = comboIdx !== null ? combos[comboIdx] : undefined
+      await stopClimbing(roomId, combo, forcedCol)
     } catch (e) {
       console.error('[CantStop] stopClimbing 실패:', e)
       const msg = e instanceof Error ? e.message : String(e)
