@@ -76,6 +76,7 @@ export default function MountainBoard({ room, myKey, previewPositions = {}, oppP
               return (
                 <div key={pos} className={cellClass}>
                   {isClimber && <PickaxeSVG />}
+                  {isBothBase && <TentSVG color="green" />}
                   {isMyBase && <TentSVG color="green" />}
                   {isOppBase && <TentSVG color="red" />}
                 </div>
