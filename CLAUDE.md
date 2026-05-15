@@ -1,49 +1,77 @@
 # CLAUDE.md — JJangNol (짱하의 놀이터)
 
-## 프로젝트 개요
-
-보드게임 "도망자"를 웹/모바일에서 1대1 온라인으로 플레이하는 앱.  
-설계 문서: `docs/superpowers/specs/2026-04-16-runner-design.md`
+> 보드게임 플레이그라운드. **멀티게임 레지스트리** 구조 — 게임은 `src/games/<id>/<Id>App.tsx`로 등록.
+> 라이브: https://byeongjae-jeon.github.io/JJangNol/
+> 설계 문서: `docs/DESIGN.md`, `docs/superpowers/specs/2026-04-16-runner-design.md`
 
 ## 기술 스택
 
-- **Frontend:** React 18 + TypeScript + Vite
-- **실시간 동기화:** Firebase Realtime Database
-- **스타일링:** CSS Modules
-- **배포:** GitHub Pages (GitHub Actions 자동 배포)
+- **Frontend**: React 18 + TypeScript + Vite + React Router (lazy + Suspense)
+- **실시간 동기화**: Firebase Realtime Database (`src/shared/firebase/`)
+- **테스트**: Vitest + jsdom + `@testing-library/react`
+- **린트**: ESLint flat config (`eslint.config.js`)
+- **배포**: GitHub Pages — `.github/workflows/deploy.yml` (main push 시 자동)
+- **패키지 매니저**: npm (`package-lock.json` 기준)
 
-## 디렉토리 구조
+⚠️ `package.json`의 `name`은 `"runner"`(레거시) — 폴더·repo·라이브 URL은 `JJangNol`. 이름 변경 시 `deploy.yml`·`App.tsx`의 `basename="/JJangNol"` 영향 검증.
+
+## 명령
+
+```bash
+npm run dev          # Vite 개발 서버
+npm run build        # tsc -b + vite build
+npm run lint         # ESLint 전체
+npm run preview      # 빌드 결과 미리보기
+npm test             # vitest run (단일 실행)
+npm run test:watch   # vitest watch
+```
+
+## 아키텍처 — 멀티게임 레지스트리
 
 ```
 src/
-  components/       # UI 컴포넌트
-    CardTrail/      # 카드 경로 (가로 스크롤)
-    CardPiles/      # 더미 3개
-    HandCards/      # 손패
-    ChaserBoard/    # 추격자 추리 보드 (1~42 그리드)
-    ActionPanel/    # 행동 버튼
-    TurnBanner/     # 현재 턴 안내
-  screens/          # 화면 단위 컴포넌트
-    HomeScreen/     # 방 만들기 / 참가
-    LobbyScreen/    # 상대방 대기
-    GameScreen/     # 게임 메인
-    ResultScreen/   # 결과
-  firebase/         # Firebase 초기화 및 DB 헬퍼
-  hooks/            # 커스텀 훅 (useGameState, useRoom 등)
-  types/            # TypeScript 타입 정의
-  utils/            # 게임 로직 유틸 (validation, highlight 등)
+  App.tsx                  # BrowserRouter basename="/JJangNol", Suspense + 동적 게임 라우트
+  main.tsx                 # React DOM 진입점
+  index.css                # 전역 CSS 변수 (테마)
+  screens/
+    PlaygroundHome/        # 홈 — 게임 선택 화면 (단일)
+  games/
+    registry.ts            # GAMES 배열 — 새 게임은 여기에 등록
+    runner/                # "도망자"
+      RunnerApp.tsx
+      components/  screens/  types/  utils/
+    cant-stop/             # "Can't Stop"
+      CantStopApp.tsx
+      components/  hooks/  screens/  types/  utils/
+  shared/
+    firebase/              # Firebase 초기화 · DB 헬퍼
+    hooks/                 # 게임 공통 훅
 ```
 
-## 브랜치 전략
+### 라우팅 규약 (`src/App.tsx`)
 
-- `main`: 배포 브랜치 — 직접 커밋/머지 허용
-- `dev/YYYY-MM-DD`: 날짜 기반 개발 브랜치
-- `feat/m/<name>`: 기능 브랜치
-- `fix/m/<name>`: 버그 수정 브랜치
+- `/` → `PlaygroundHome` (게임 선택)
+- `/games/:id/*` → registry의 `component` (`React.lazy` 로드)
+- 매칭 안 되는 경로 → `/`로 redirect
+
+### 새 게임 추가 절차
+
+1. `src/games/<id>/<Id>App.tsx` 생성 (default export)
+2. `src/games/registry.ts`의 `GAMES`에 entry 추가:
+   ```ts
+   { id: '<id>', name, emoji, players, component: lazy(() => import('./<id>/<Id>App')) }
+   ```
+3. PlaygroundHome은 registry를 읽어 자동 렌더 — UI 추가 불필요.
+
+### 폴더 격리 규칙
+
+- 게임 폴더에서 **다른 게임 폴더 import 금지** (`games/runner/` ↔ `games/cant-stop/`). 공통 코드는 `src/shared/`로 추출.
+- 게임 로직(검증·하이라이트)은 `<game>/utils/`로 분리 — 컴포넌트는 dumb 유지.
+- 컴포넌트 스타일은 CSS Modules(`*.module.css`)로 격리.
 
 ## 환경변수
 
-Firebase 설정은 `.env.local`에 작성 (`.env.example` 참고):
+`.env.local` 작성 (`.env.example` 템플릿):
 
 ```
 VITE_FIREBASE_API_KEY=
@@ -53,18 +81,29 @@ VITE_FIREBASE_PROJECT_ID=
 VITE_FIREBASE_APP_ID=
 ```
 
-## 게임 핵심 규칙 (구현 시 참고)
+## 브랜치 전략
 
-- 카드 간격 최대 3 (부스터로 확장 가능)
-- 부스터: 홀수=+1 발자국, 짝수=+2 발자국, 누적 가능
-- 추리: 선택한 카드 전부 맞아야 공개 (하나라도 틀리면 전부 실패)
-- 첫 턴 도망자: 4~14에서 3장 + 15~29에서 2장 드로우, 최대 2장 놓기 가능
+- `main`: 배포 브랜치 — push 시 GitHub Actions 자동 배포
+- `dev/YYYY-MM-DD`: 날짜별 통합 브랜치
+- `feat/m/<name>` / `fix/m/<name>`: 기능·수정 단위
+
+## 게임별 핵심 메모
+
+### runner — "도망자" (`src/games/runner/`)
+
+- 카드 간격 최대 3 — 부스터로 확장 (홀수=+1발자국, 짝수=+2발자국, 누적 가능)
+- 추리: 선택한 카드 **전부** 맞아야 공개. 1장이라도 틀리면 전부 실패.
+- 첫 턴 도망자: 4~14에서 3장 + 15~29에서 2장 드로우, 최대 2장 놓기
 - 첫 턴 추격자: 원하는 더미에서 2장 드로우
-- `runnerHand` 값은 추격자 클라이언트에 노출 금지 (Firebase Rules로 보호)
+- 🔒 **보안**: `runnerHand`는 추격자 클라이언트에 노출 금지 → **Firebase Rules로 차단 필수**
 
-## 비주얼 테마
+### cant-stop — "Can't Stop" (`src/games/cant-stop/`)
 
-보드게임 클래식 스타일:
+상세 규칙·구현은 `src/games/cant-stop/types/`와 `docs/DESIGN.md` 참고.
+
+## 비주얼 테마 (전역 CSS 변수, `src/index.css`)
+
+보드게임 클래식 색상 — 게임별 별도 테마가 필요하면 `src/games/<id>/*` 내부 CSS Modules로 오버라이드.
 
 ```css
 --color-bg: #2c1810;
